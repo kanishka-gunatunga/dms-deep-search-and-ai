@@ -134,6 +134,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
       name: "Advanced Search",
       url: "/advanced-search",
       icon: <GoZoomIn />,
+      permission: { group: "Advanced Search", action: "Advanced Search" },
+    },
+    {
+      name: "Deep Search",
+      url: "/deep-search",
+      icon: <GoZoomIn />,
       permission: { group: "Deep Search", action: "Deep Search" },
     },
     {

@@ -64,6 +64,10 @@ interface TableItem {
   created_date: string;
   created_by: string;
   document_preview: string;
+  pages: {
+    page: number;
+    highlighted_content: string;
+  }[];
 }
 
 interface ShareItem {
@@ -1591,6 +1595,7 @@ export default function AllDocTable() {
     setIsLoadingTable(true)
     try {
       const response = await postWithAuth("deep-search", formData);
+      console.log(response);
       setDummyData(response);
       // fetchDocumentsData(response);
       setIsLoadingTable(false)
@@ -1721,420 +1726,66 @@ export default function AllDocTable() {
           <div>
             {isLoadingTable && <LoadingBar />}
           </div>
-          <div>
-            <div
-              style={{ maxHeight: "350px", overflowY: "auto" }}
-              className="custom-scroll "
-            >
-              <Table hover responsive>
-                <thead className="sticky-header">
-                  <tr>
-                    {/* <th className="position-relative">
-                      {selectedItems.length > 0 ? (
-                        <Button shape="circle" icon={<FaShareAlt />} onClick={() => handleOpenModal("allDocShareModel")} style={{ position: "absolute", top: "5px", left: "14px", backgroundColor: "#6777ef", color: "#fff" }} />
-                      ) : (
-                        <Checkbox
-                          checked={
-                            selectedItems.length === paginatedData.length && paginatedData.length > 0
-                          }
-                          indeterminate={
-                            selectedItems.length > 0 && selectedItems.length < paginatedData.length
-                          }
-                          onChange={(e) => handleSelectAll(e.target.checked)}
-                          style={{
-                            display: "flex",
-                            alignSelf: "center",
-                            justifySelf: "center",
-                          }}
-                        />
-                      )}
-
-                    </th> */}
-                    <th className="position-relative">
-                      {/* {selectedItems.length > 0 ? (
-                                            <Button shape="circle" icon={<FaShareAlt />} onClick={() => handleOpenModal("allDocShareModel")} style={{ position: "absolute", top: "5px", left: "14px", backgroundColor: "#6777ef", color: "#fff" }} />
-                                          ) : (
-                                            <Checkbox
-                                              checked={
-                                                selectedItems.length === paginatedData.length && paginatedData.length > 0
-                                              }
-                                              indeterminate={
-                                                selectedItems.length > 0 && selectedItems.length < paginatedData.length
-                                              }
-                                              onChange={(e) => handleSelectAll(e.target.checked)}
-                                              style={{
-                                                display: "flex",
-                                                alignSelf: "center",
-                                                justifySelf: "center",
-                                              }} 
-                                            />
-                                          )} */}
-                      {selectedItems.length > 0 ? (
-                        <DropdownButton
-                          id="dropdown-basic-button"
-                          drop="end"
-                          title={<FaEllipsisV />}
-                          className="no-caret position-static dropdown-toggle-bulk"
-                          style={{ zIndex: "99999", padding: '0px !important', backgroundColor: "transparent", color: "#000" }}
-                        >
-                          {hasPermission(permissions, "All Documents", "Share Document") && (
-                            <Dropdown.Item onClick={() => handleOpenModal("allDocShareModel")} className="py-2">
-                              <IoShareSocial className="me-2" />
-                              Share
-                            </Dropdown.Item>
-                          )}
-                          {hasPermission(permissions, "All Documents", "Delete Document") && (
-                            <Dropdown.Item
-                              onClick={() => handleOpenModal("deleteBulkFileModel")}
-                              className="py-2"
-                            >
-                              <AiFillDelete className="me-2" />
-                              Delete
-                            </Dropdown.Item>
-                          )}
-
-                        </DropdownButton>
-                      ) : (
-                        <Checkbox
-                          checked={selectedItems.length === paginatedData.length && paginatedData.length > 0}
-                          indeterminate={selectedItems.length > 0 && selectedItems.length < paginatedData.length}
-                          onChange={(e) => handleSelectAll(e.target.checked)}
-                          style={{
-                            display: "flex",
-                            alignSelf: "center",
-                            justifySelf: "center",
-                          }}
-                        />
-                      )}
-                    </th>
-                    <th>Action</th>
-                    <th className="text-start">Name</th>
-                    <th className="text-start">Document Category</th>
-                    <th className="text-start">Storage</th>
-                    <th
-                      className="text-start"
-                      onClick={handleSort}
-                      style={{ cursor: "pointer" }}
-                    >
-                      Created Date{" "}
-                      {sortAsc ? (
-                        <MdArrowDropUp fontSize={20} />
-                      ) : (
-                        <MdArrowDropDown fontSize={20} />
-                      )}
-                    </th>
-                    <th className="text-start">Created By</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginatedData.length > 0 ? (
-                    paginatedData.map((item) => (
-                      <tr key={item.id} onMouseEnter={() => setHoveredRow(item.id)}
-                        onMouseLeave={() => setHoveredRow(null)}
-                        onMouseMove={handleMouseMove}>
-                        <td>
-                          <Checkbox
-                            checked={selectedItems.includes(item.id)}
-                            onChange={() => handleCheckboxChange(item.id, item.name)}
-                            style={{
-                              display: "flex",
-                              alignSelf: "center",
-                              justifySelf: "center",
-                            }}
-                          />
-
-                        </td>
-                        <td>
-                          <DropdownButton
-                            id="dropdown-basic-button"
-                            drop="end"
-                            title={<FaEllipsisV />}
-                            className="no-caret position-static"
-                            style={{ zIndex: "99999" }}
-                          >
-                            {hasPermission(permissions, "All Documents", "View Documents") && (
-                              <Dropdown.Item
-                                className="py-2"
-                                onClick={() =>
-                                  handleOpenModal("viewModel", item.id, item.name)
-                                }
-                              >
-                                <IoEye className="me-2" />
-                                View
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(permissions, "All Documents", "Edit Document") && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal("editModel", item.id, item.name)
-                                }
-                                className="py-2"
-                              >
-                                <MdModeEditOutline className="me-2" />
-                                Edit
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(permissions, "All Documents", "Share Document") && (
-                              <Dropdown.Item onClick={() =>
-                                handleOpenModal(
-                                  "shareDocumentModel",
-                                  item.id,
-                                  item.name
-                                )
-                              } className="py-2">
-                                <IoShareSocial className="me-2" />
-                                Share
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(permissions, "All Documents", "Manage Sharable Link") && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleGetShareableLinkModel(item?.id)
-                                }
-                                className="py-2"
-                              >
-                                <MdOutlineInsertLink className="me-2" />
-                                Get Shareable Link
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(permissions, "All Documents", "Download Document") && (
-                              <Dropdown.Item className="py-2">
-                                <Link
-                                  href={"#"}
-                                  style={{ color: "#212529" }}
-                                  onClick={() => handleDownload(item.id, userId)}
-                                >
-                                  <MdFileDownload className="me-2" />
-                                  Download
-                                </Link>
-                              </Dropdown.Item>
-                            )}
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "uploadNewVersionFileModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <MdUpload className="me-2" />
-                              Upload New Version file
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "versionHistoryModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <GoHistory className="me-2" />
-                              Version History
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "commentModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <BiSolidCommentDetail className="me-2" />
-                              Comment
-                            </Dropdown.Item>
-
-                            {hasPermission(permissions, "All Documents", "Add Reminder") && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "addReminderModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <BsBellFill className="me-2" />
-                                Add Reminder
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(permissions, "All Documents", "Send Email") && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "sendEmailModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <MdEmail className="me-2" />
-                                Send Email
-                              </Dropdown.Item>
-                            )}
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "removeIndexingModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <AiOutlineZoomOut className="me-2" />
-                              Remove From Search
-                            </Dropdown.Item>
-
-                            {hasPermission(permissions, "All Documents", "Archive Document") && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "docArchivedModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <FaArchive className="me-2" />
-                                Archive
-                              </Dropdown.Item>
-                            )}
-                            {hasPermission(permissions, "All Documents", "Delete Document") && (
-                              <Dropdown.Item
-                                onClick={() =>
-                                  handleOpenModal(
-                                    "deleteFileModel",
-                                    item.id,
-                                    item.name
-                                  )
-                                }
-                                className="py-2"
-                              >
-                                <AiFillDelete className="me-2" />
-                                Delete
-                              </Dropdown.Item>
-                            )}
-
-                          </DropdownButton>
-                        </td>
-
-                        {/* <td>
-                          {item.name}
-                          {hoveredRow === item.id && item.document_preview && (
-                            <div
-                              className="preview-image"
-                              style={{
-                                position: "fixed",
-                                top: cursorPosition.y + 10,
-                                left: cursorPosition.x + 10,
-                                width: "200px",
-                                maxHeight: "200px",
-                                maxWidth: "200px",
-                                zIndex: 1000,
-                              }}
-                            >
-                              <Image
-                                src={item.document_preview}
-                                alt="Preview"
-                                width={200}
-                                height={200}
-                              />
-                            </div>
-                          )}
-                        </td> */}
-                        <td
-                          onMouseEnter={() => setHoveredRow(item.id)}
-                          onMouseLeave={() => setHoveredRow(null)}
-                        >
-                          {item.name}
-                          {hoveredRow === item.id && item.document_preview && (
-                            <div
-                              className="preview-image p-0"
-                              style={{
-                                position: "fixed",
-                                top: cursorPosition.y + 10,
-                                left: cursorPosition.x + 10,
-                                width: "200px",
-                                maxHeight: "200px",
-                                maxWidth: "200px",
-                                zIndex: 1000,
-                                overflow: "hidden"
-                              }}
-                            >
-                              <Image
-                                src={item.document_preview}
-                                alt="Preview"
-                                width={200}
-                                height={200}
-                                style={{
-                                  width: "200px",
-                                  height: "200px",
-                                }}
-                              />
-                            </div>
-                          )}
-                        </td>
-                        <td>{item.category?.category_name || ""}</td>
-                        <td>{item.storage}</td>
-                        <td>
-                          {new Date(item.created_date).toLocaleDateString(
-                            "en-GB"
-                          )}
-                        </td>
-                        <td>{item.created_by}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <div className="text-start w-100 py-3">
-                      <Paragraph text="No data available" color="#333" />
-                    </div>
-                  )}
-                </tbody>
-              </Table>
-            </div>
-            <div className="d-flex flex-column flex-lg-row paginationFooter">
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="pagintionText mb-0 me-2">Items per page:</p>
-                <Form.Select
-                  onChange={handleItemsPerPageChange}
-                  value={itemsPerPage}
+          <div
                   style={{
-                    width: "100px",
-                    padding: "5px 10px !important",
-                    fontSize: "12px",
+                    maxHeight: "380px",
+                    minHeight: "320px",
+                    overflowY: "auto",
+                    overflowX: "hidden",
                   }}
+                  className="custom-scroll"
                 >
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={30}>30</option>
-                </Form.Select>
-              </div>
-              <div className="d-flex flex-row align-items-center px-lg-5">
-                <div className="pagination-info" style={{ fontSize: "14px" }}>
-                  {startIndex} – {endIndex} of {totalItems}
-                </div>
+          <div className="row mt-4">
+          {paginatedData.length > 0 ? (
+  paginatedData.map((item) => (
+    <div key={item.id} className="col-md-12 mb-4">
+    
+      <p className="mb-2 mt-2" style={{ fontSize: "16px", color: "#000",fontWeight: "bold" }}>
+        {item.name}
+      </p>
 
-                <Pagination className="ms-3">
-                  <Pagination.Prev
-                    onClick={handlePrev}
-                    disabled={currentPage === 1}
-                  />
-                  <Pagination.Next
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                  />
-                </Pagination>
+      {item.pages && item.pages.length > 0 ? (
+        <div>
+          <p style={{ fontSize: "14px", fontWeight: "bold", color: "#555" }}>
+            Matched Pages:
+          </p>
+          <div className="d-flex flex-column gap-2">
+            {item.pages.map((pageItem, index) => (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: "#f9f9f9",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  fontSize: "14px",
+                  color: "#333",
+                  border: "1px solid #ddd",
+                }}
+              >
+                <strong>Page {pageItem.page}</strong>
+                <div
+                  style={{ marginTop: "4px" }}
+                  className="searched-text"
+                  dangerouslySetInnerHTML={{ __html: pageItem.highlighted_content}}
+                />
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p style={{ fontSize: "14px", color: "#888" }}>
+          No specific highlights found.
+        </p>
+      )}
+    </div>
+  ))
+) : (
+  <div className="text-start w-100 py-3">
+    <Paragraph text="No data available" color="#333" />
+  </div>
+)}
+
+          </div>
           </div>
         </div>
         {/* Edit Modal */}
