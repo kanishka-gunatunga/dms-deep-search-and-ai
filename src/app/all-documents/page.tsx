@@ -37,7 +37,7 @@ import {
 } from "react-icons/io5";
 import { Button, Checkbox, DatePicker, Input, Menu, Radio } from "antd";
 import type { DatePickerProps } from "antd";
-import type { RadioChangeEvent } from 'antd';
+import type { RadioChangeEvent } from "antd";
 import {
   MdArrowDropDown,
   MdArrowDropUp,
@@ -51,7 +51,12 @@ import {
 import InfoModal from "@/components/common/InfoModel";
 import useAuth from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
-import { deleteAllWithAuth, deleteWithAuth, getWithAuth, postWithAuth } from "@/utils/apiClient";
+import {
+  deleteAllWithAuth,
+  deleteWithAuth,
+  getWithAuth,
+  postWithAuth,
+} from "@/utils/apiClient";
 import { handleDownload, handleView } from "@/utils/documentFunctions";
 import {
   fetchAndMapUserData,
@@ -71,7 +76,7 @@ import {
 } from "@/types/types";
 import dynamic from "next/dynamic";
 import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
@@ -133,7 +138,7 @@ interface ViewDocumentItem {
   attributes: string;
   type: string;
   url: string;
-  enable_external_file_view: number
+  enable_external_file_view: number;
 }
 
 interface CategoryDropdownItem {
@@ -147,7 +152,6 @@ interface HalfMonth {
   month: string;
   date: string | number;
 }
-
 
 export default function AllDocTable() {
   const { userId, userName } = useUserContext();
@@ -172,7 +176,8 @@ export default function AllDocTable() {
   const [users, setUsers] = useState<string[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
-  const [selectedCategoryIdEdit, setSelectedCategoryIdEdit] = useState<string>("");
+  const [selectedCategoryIdEdit, setSelectedCategoryIdEdit] =
+    useState<string>("");
 
   const [metaTags, setMetaTags] = useState<string[]>([]);
   const [viewMetaTags, setViewMetaTags] = useState<string[]>([]);
@@ -286,17 +291,22 @@ export default function AllDocTable() {
     null
   );
   const [selectedDateTime, setSelectedDateTime] = useState<string>("");
-  const [selectedStartDateTime, setSelectedStartDateTime] = useState<string>("");
+  const [selectedStartDateTime, setSelectedStartDateTime] =
+    useState<string>("");
   const [selectedEndDateTime, setSelectedEndDateTime] = useState<string>("");
-  const [errors, setErrors] = useState<{ expire_date_time: string; password: string }>({
+  const [errors, setErrors] = useState<{
+    expire_date_time: string;
+    password: string;
+  }>({
     expire_date_time: "",
     password: "",
   });
   const [editErrors, seteditErrors] = useState<any>({});
-  const [shareableLinkDataSetting, setShareableLinkDataSetting] = useState(initialLinkData);
+  const [shareableLinkDataSetting, setShareableLinkDataSetting] =
+    useState(initialLinkData);
   const [hoveredRow, setHoveredRow] = useState<number | null>(1);
   const [isLoadingTable, setIsLoadingTable] = useState(false);
-  const [term, setTerm] = useState('');
+  const [term, setTerm] = useState("");
   const [filterData, setFilterData] = useState({
     term: "",
     meta_tags: "",
@@ -307,8 +317,6 @@ export default function AllDocTable() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-
 
   // data fetch functions
   const fetchComments = async (id: number) => {
@@ -345,7 +353,6 @@ export default function AllDocTable() {
           allow_download: response.allow_download,
         });
       }
-
     } catch (error) {
       console.error("Failed to fetch documents data:", error);
     }
@@ -398,16 +405,13 @@ export default function AllDocTable() {
   useEffect(() => {
     if (modalStates.viewModel && selectedDocumentId !== null) {
       handleGetViewData(selectedDocumentId);
-      console.log("View Document : ", viewDocument)
+      console.log("View Document : ", viewDocument);
     }
   }, [modalStates.viewModel, selectedDocumentId]);
-
 
   // const handleCategoryEditSelect = (categoryId: string) => {
   //   setSelectedCategoryIdEdit(categoryId);
   // };
-
-
 
   const handleCategoryEditSelect = (categoryId: string) => {
     const selectedCategory = categoryDropDownData.find(
@@ -421,7 +425,6 @@ export default function AllDocTable() {
     }
   };
 
-
   const selectedCategory = categoryDropDownData.find(
     (category) => category.id.toString() === selectedCategoryIdEdit
   );
@@ -431,9 +434,9 @@ export default function AllDocTable() {
     const sortedData = [...dummyData].sort((a, b) =>
       sortAsc
         ? new Date(a.created_date).getTime() -
-        new Date(b.created_date).getTime()
+          new Date(b.created_date).getTime()
         : new Date(b.created_date).getTime() -
-        new Date(a.created_date).getTime()
+          new Date(a.created_date).getTime()
     );
     setDummyData(sortedData);
   };
@@ -507,7 +510,9 @@ export default function AllDocTable() {
     }));
   };
 
-  const handleShareSettingCheckboxChange = (field: keyof typeof shareableLinkData) => {
+  const handleShareSettingCheckboxChange = (
+    field: keyof typeof shareableLinkData
+  ) => {
     setShareableLinkDataSetting((prevState) => ({
       ...prevState,
       [field]: !prevState[field],
@@ -608,21 +613,20 @@ export default function AllDocTable() {
     }
   };
 
-
   // pagination
   const totalItems = Array.isArray(dummyData) ? dummyData.length : 0;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
-  const paginatedData = Array.isArray(dummyData) ? dummyData.slice(startIndex, endIndex) : [];
+  const paginatedData = Array.isArray(dummyData)
+    ? dummyData.slice(startIndex, endIndex)
+    : [];
 
-
-  const handleFilterChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleFilterChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setFilterValue(e.target.value);
-
   };
-
-
 
   const handleTermSearch = async (value: string) => {
     setFilterData((prevState) => ({
@@ -692,7 +696,6 @@ export default function AllDocTable() {
   //   }
   // };
 
-
   const handleSearch = async () => {
     const formData = new FormData();
 
@@ -732,7 +735,6 @@ export default function AllDocTable() {
     }
   };
 
-
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       handleSearch();
@@ -741,24 +743,24 @@ export default function AllDocTable() {
     return () => clearTimeout(delayDebounceFn);
   }, [filterData]);
 
-  const handleChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setFilterValue(e.target.value);
   };
 
-
   const filteredData = filterValue
     ? allShareData.filter(
-      (item) =>
-        item.email && item.email.toLowerCase().includes(filterValue.toLowerCase())
-    )
+        (item) =>
+          item.email &&
+          item.email.toLowerCase().includes(filterValue.toLowerCase())
+      )
     : allShareData;
   const totalItemsShare = filteredData.length;
   const totalPagesShare = Math.ceil(totalItemsShare / itemsPerPage);
   const startIndexShare = (currentPage - 1) * itemsPerPage;
   const endIndexShare = Math.min(currentPage * itemsPerPage, totalItemsShare);
   const paginatedDataShare = filteredData.slice(startIndexShare, endIndexShare);
-
-
 
   const handlePrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -780,11 +782,12 @@ export default function AllDocTable() {
     if (currentMeta && !metaTags.includes(currentMeta)) {
       const updatedMetaTags = [...metaTags, currentMeta];
       setMetaTags(updatedMetaTags);
-      setEditDocument((prev) => prev ? { ...prev, meta_tags: JSON.stringify(updatedMetaTags) } : null);
+      setEditDocument((prev) =>
+        prev ? { ...prev, meta_tags: JSON.stringify(updatedMetaTags) } : null
+      );
       setCurrentMeta("");
     }
   };
-
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -793,18 +796,22 @@ export default function AllDocTable() {
   };
 
   const updateMetaTag = (index: number, value: string) => {
-    const updatedMetaTags = metaTags.map((tag, i) => (i === index ? value : tag));
+    const updatedMetaTags = metaTags.map((tag, i) =>
+      i === index ? value : tag
+    );
     setMetaTags(updatedMetaTags);
-    setEditDocument((prev) => prev ? { ...prev, meta_tags: JSON.stringify(updatedMetaTags) } : null);
+    setEditDocument((prev) =>
+      prev ? { ...prev, meta_tags: JSON.stringify(updatedMetaTags) } : null
+    );
   };
-
 
   const removeMetaTag = (index: number) => {
     const updatedMetaTags = metaTags.filter((_, i) => i !== index);
     setMetaTags(updatedMetaTags);
-    setEditDocument((prev) => prev ? { ...prev, meta_tags: JSON.stringify(updatedMetaTags) } : null);
+    setEditDocument((prev) =>
+      prev ? { ...prev, meta_tags: JSON.stringify(updatedMetaTags) } : null
+    );
   };
-
 
   // functions with api calls
   const handleRemoveIndexing = async (id: number, userId: string) => {
@@ -980,27 +987,22 @@ export default function AllDocTable() {
   const handleGetShareableLinkModel = async (id: number) => {
     const response = await getWithAuth(`get-shareble-link/${id}`);
     if (!response.link) {
-      handleOpenModal(
-        "shareableLinkModel",
-        id,
-      )
+      handleOpenModal("shareableLinkModel", id);
     } else {
       setGeneratedLink(response.link);
-      handleOpenModal(
-        "generatedShareableLinkModel",
-        id,
-      )
+      handleOpenModal("generatedShareableLinkModel", id);
     }
-
   };
 
   const handleGetShareableLink = async (id: number) => {
-
     try {
       let validationErrors = { expire_date_time: "", password: "" };
       setErrors(validationErrors);
 
-      if (shareableLinkData.has_expire_date && !shareableLinkData.expire_date_time) {
+      if (
+        shareableLinkData.has_expire_date &&
+        !shareableLinkData.expire_date_time
+      ) {
         validationErrors.expire_date_time = "Expiration date is required.";
       }
 
@@ -1039,7 +1041,9 @@ export default function AllDocTable() {
         setShareableLinkData(initialLinkData);
       } else {
         setToastType("error");
-        setToastMessage("An error occurred while generating the sharable link!");
+        setToastMessage(
+          "An error occurred while generating the sharable link!"
+        );
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
@@ -1091,7 +1095,9 @@ export default function AllDocTable() {
 
   const handleDeleteShareableLink = async (id: number) => {
     try {
-      const response = await deleteWithAuth(`delete-shareble-link/${id}/${userId}`);
+      const response = await deleteWithAuth(
+        `delete-shareble-link/${id}/${userId}`
+      );
       if (response.status === "success") {
         setToastType("success");
         setToastMessage("The link was deleted successfully.");
@@ -1123,11 +1129,17 @@ export default function AllDocTable() {
       let validationErrors = { expire_date_time: "", password: "" };
       setErrors(validationErrors);
 
-      if (shareableLinkDataSetting.has_expire_date && !shareableLinkDataSetting.expire_date_time) {
+      if (
+        shareableLinkDataSetting.has_expire_date &&
+        !shareableLinkDataSetting.expire_date_time
+      ) {
         validationErrors.expire_date_time = "Expiration date is required.";
       }
 
-      if (shareableLinkDataSetting.has_password && !shareableLinkDataSetting.password) {
+      if (
+        shareableLinkDataSetting.has_password &&
+        !shareableLinkDataSetting.password
+      ) {
         validationErrors.password = "Password is required.";
       }
 
@@ -1143,7 +1155,10 @@ export default function AllDocTable() {
         "has_expire_date",
         shareableLinkDataSetting.has_expire_date ? "1" : "0"
       );
-      formData.append("expire_date_time", shareableLinkDataSetting.expire_date_time);
+      formData.append(
+        "expire_date_time",
+        shareableLinkDataSetting.expire_date_time
+      );
       formData.append(
         "has_password",
         shareableLinkDataSetting.has_password ? "1" : "0"
@@ -1154,13 +1169,12 @@ export default function AllDocTable() {
         shareableLinkDataSetting.allow_download ? "1" : "0"
       );
       formData.append("user", userId || "");
-      const response = await postWithAuth(
-        `get-shareble-link/${id}`,
-        formData
-      );
+      const response = await postWithAuth(`get-shareble-link/${id}`, formData);
       if (response.status === "fail") {
         setToastType("error");
-        setToastMessage("An error occurred while generating the shareable link!");
+        setToastMessage(
+          "An error occurred while generating the shareable link!"
+        );
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
@@ -1241,7 +1255,6 @@ export default function AllDocTable() {
           setShowToast(false);
         }, 5000);
       } else {
-
         handleCloseModal("sendEmailModel");
         setToastType("success");
         setToastMessage("Email sent successfully!");
@@ -1290,7 +1303,6 @@ export default function AllDocTable() {
     }
   };
 
-
   // const handleGetViewData = async (id: number) => {
   //   try {
   //     const response = await getWithAuth(`view-document/${id}/${userId}`);
@@ -1323,7 +1335,6 @@ export default function AllDocTable() {
   };
 
   const handleSaveEditData = async (id: number) => {
-
     try {
       const validationErrors = validate();
       if (Object.keys(validationErrors).length > 0) {
@@ -1352,7 +1363,7 @@ export default function AllDocTable() {
         }, 5000);
         handleCloseModal("editModel");
         fetchDocumentsData(setDummyData);
-        setMetaTags([])
+        setMetaTags([]);
       } else {
         setToastType("error");
         setToastMessage("An error occurred while updating the document!");
@@ -1360,7 +1371,7 @@ export default function AllDocTable() {
         setTimeout(() => {
           setShowToast(false);
         }, 5000);
-        setMetaTags([])
+        setMetaTags([]);
       }
     } catch (error) {
       // console.error("Error updating document:", error);
@@ -1377,7 +1388,7 @@ export default function AllDocTable() {
     try {
       const formData = new FormData();
       formData.append("document_id", id);
-      formData.append("subject", addReminder?.subject || '');
+      formData.append("subject", addReminder?.subject || "");
       formData.append("message", addReminder?.message || "");
       formData.append("date_time", selectedDateTime || "");
       formData.append("is_repeat", addReminder?.is_repeat || "");
@@ -1389,11 +1400,12 @@ export default function AllDocTable() {
         formData.append("frequency_details", JSON.stringify(weekDay) || "");
       } else if (addReminder?.frequency === "Weekly") {
         formData.append("frequency_details", JSON.stringify(days) || "");
-      }
-      else if (addReminder?.frequency === "Quarterly") {
-        formData.append("frequency_details", JSON.stringify(quarterMonths) || "");
-      }
-      else if (addReminder?.frequency === "Half Yearly") {
+      } else if (addReminder?.frequency === "Quarterly") {
+        formData.append(
+          "frequency_details",
+          JSON.stringify(quarterMonths) || ""
+        );
+      } else if (addReminder?.frequency === "Half Yearly") {
         formData.append("frequency_details", JSON.stringify(halfMonths) || "");
       }
       if (users) {
@@ -1407,21 +1419,18 @@ export default function AllDocTable() {
       //   console.log(` ${key}: ${value}`);
       // });
 
-      const response = await postWithAuth(
-        `reminder/`,
-        formData
-      );
+      const response = await postWithAuth(`reminder/`, formData);
       setAddReminder(null);
       setWeekDay([]);
       setDays("");
-      setQuarterMonths([])
-      setHalfMonths([])
-      setUsers([])
+      setQuarterMonths([]);
+      setHalfMonths([]);
+      setUsers([]);
       setSelectedUserIds([]);
       if (response.status === "success") {
         handleCloseModal("addReminderModel");
-        setSelectedRoleIds([])
-        setRoles([])
+        setSelectedRoleIds([]);
+        setRoles([]);
         setToastType("success");
         setToastMessage("Reminder added successfully!");
         setShowToast(true);
@@ -1447,7 +1456,6 @@ export default function AllDocTable() {
     }
   };
 
-
   const handleDailyCheckboxChange = (day: string) => {
     setWeekDay((prevWeekDay) => {
       if (prevWeekDay.includes(day)) {
@@ -1458,16 +1466,16 @@ export default function AllDocTable() {
     });
   };
 
-
   const handleWeekRadioChange = (e: RadioChangeEvent) => {
     setDays(e.target.value);
   };
 
-
   const handleHalfMonthChange = (period: string, month: string) => {
     setHalfMonths((prevState) => {
       const updatedState = [...prevState];
-      const periodIndex = updatedState.findIndex((item) => item.period === period);
+      const periodIndex = updatedState.findIndex(
+        (item) => item.period === period
+      );
 
       if (periodIndex > -1) {
         updatedState[periodIndex].month = month;
@@ -1482,7 +1490,9 @@ export default function AllDocTable() {
   const handleHalfMonthDateChange = (period: string, date: string) => {
     setHalfMonths((prevState) => {
       const updatedState = [...prevState];
-      const periodIndex = updatedState.findIndex((item) => item.period === period);
+      const periodIndex = updatedState.findIndex(
+        (item) => item.period === period
+      );
 
       if (periodIndex > -1) {
         updatedState[periodIndex].date = date;
@@ -1495,7 +1505,9 @@ export default function AllDocTable() {
   const handleQuarterMonthChange = (period: string, month: string) => {
     setQuarterMonths((prevState) => {
       const updatedState = [...prevState];
-      const periodIndex = updatedState.findIndex((item) => item.period === period);
+      const periodIndex = updatedState.findIndex(
+        (item) => item.period === period
+      );
 
       if (periodIndex > -1) {
         updatedState[periodIndex].month = month;
@@ -1510,7 +1522,9 @@ export default function AllDocTable() {
   const handleQuarterMonthDateChange = (period: string, date: string) => {
     setQuarterMonths((prevState) => {
       const updatedState = [...prevState];
-      const periodIndex = updatedState.findIndex((item) => item.period === period);
+      const periodIndex = updatedState.findIndex(
+        (item) => item.period === period
+      );
 
       if (periodIndex > -1) {
         updatedState[periodIndex].date = date;
@@ -1523,29 +1537,37 @@ export default function AllDocTable() {
   const handleShareUserDocument = async (id: any, userId: string) => {
     try {
       const formData = new FormData();
-      formData.append("type", 'user');
+      formData.append("type", "user");
       if (modalStates.shareAssignUserModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedUserIds) || '');
+        formData.append(
+          "assigned_roles_or_user",
+          JSON.stringify(selectedUserIds) || ""
+        );
       } else if (modalStates.shareAssignRoleModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedRoleIds) || '');
+        formData.append(
+          "assigned_roles_or_user",
+          JSON.stringify(selectedRoleIds) || ""
+        );
       }
-      formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
+      formData.append(
+        "is_time_limited",
+        shareDocumentData?.is_time_limited || ""
+      );
       formData.append("start_date_time", selectedStartDateTime || "");
       formData.append("end_date_time", selectedEndDateTime || "");
-      formData.append("is_downloadable", shareDocumentData?.is_downloadable || "");
+      formData.append(
+        "is_downloadable",
+        shareDocumentData?.is_downloadable || ""
+      );
       formData.append("user", userId || "");
 
-      const response = await postWithAuth(
-        `document-share/${id}`,
-        formData
-      );
+      const response = await postWithAuth(`document-share/${id}`, formData);
       setShareDocumentData(null);
-      setUsers([])
+      setUsers([]);
       setSelectedUserIds([]);
-      setSelectedEndDateTime("")
-      setSelectedStartDateTime("")
+      setSelectedEndDateTime("");
+      setSelectedStartDateTime("");
       if (response.status === "success") {
-
         setToastType("success");
         setToastMessage("Document shared successfully!");
         setShowToast(true);
@@ -1562,7 +1584,6 @@ export default function AllDocTable() {
           setShowToast(false);
         }, 5000);
         fetchShareDocumentData(id);
-
       }
     } catch (error) {
       setToastType("error");
@@ -1580,25 +1601,34 @@ export default function AllDocTable() {
       const formData = new FormData();
       formData.append("type", "role");
       if (modalStates.shareAssignUserModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedUserIds) || '');
+        formData.append(
+          "assigned_roles_or_user",
+          JSON.stringify(selectedUserIds) || ""
+        );
       } else if (modalStates.shareAssignRoleModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedRoleIds) || '');
+        formData.append(
+          "assigned_roles_or_user",
+          JSON.stringify(selectedRoleIds) || ""
+        );
       }
-      formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
+      formData.append(
+        "is_time_limited",
+        shareDocumentData?.is_time_limited || ""
+      );
       formData.append("start_date_time", selectedStartDateTime || "");
       formData.append("end_date_time", selectedEndDateTime || "");
-      formData.append("is_downloadable", shareDocumentData?.is_downloadable || "");
+      formData.append(
+        "is_downloadable",
+        shareDocumentData?.is_downloadable || ""
+      );
       formData.append("user", userId || "");
 
-      const response = await postWithAuth(
-        `document-share/${id}`,
-        formData
-      );
+      const response = await postWithAuth(`document-share/${id}`, formData);
       setShareDocumentData(null);
-      setRoles([])
+      setRoles([]);
       setSelectedRoleIds([]);
-      setSelectedStartDateTime("")
-      setSelectedEndDateTime("")
+      setSelectedStartDateTime("");
+      setSelectedEndDateTime("");
       if (response.status === "success") {
         setToastType("success");
         setToastMessage("Document shared successfully!");
@@ -1616,7 +1646,6 @@ export default function AllDocTable() {
           setShowToast(false);
         }, 5000);
         fetchShareDocumentData(id);
-
       } else {
         setToastType("error");
         setToastMessage("An error occurred while sharing the document!");
@@ -1636,9 +1665,12 @@ export default function AllDocTable() {
     }
   };
 
-  const handleUserType = (itemType: React.SetStateAction<string>, itemId: number) => {
+  const handleUserType = (
+    itemType: React.SetStateAction<string>,
+    itemId: number
+  ) => {
     setSelectedShareDocUserType(itemType);
-    setSelectedShareDocId(itemId)
+    setSelectedShareDocId(itemId);
   };
   const currentDateTime = new Date().toLocaleString();
   const handleDeleteShareDocument = async (id: any) => {
@@ -1648,7 +1680,9 @@ export default function AllDocTable() {
     }
 
     try {
-      const response = await deleteWithAuth(`delete-share/${selectedShareDocUserType}/${selectedShareDocId}`);
+      const response = await deleteWithAuth(
+        `delete-share/${selectedShareDocUserType}/${selectedShareDocId}`
+      );
       if (response.status === "success") {
         handleCloseModal("shareDeleteModel");
         setToastType("success");
@@ -1678,50 +1712,58 @@ export default function AllDocTable() {
     }
   };
 
-
-
-  const onDateTimeOk = (value: DatePickerProps['value'], dateString: string) => {
+  const onDateTimeOk = (
+    value: DatePickerProps["value"],
+    dateString: string
+  ) => {
     if (value) {
       setSelectedDateTime(dateString);
     }
   };
 
-  const onStartDateTimeOk = (value: DatePickerProps['value'], dateString: string) => {
+  const onStartDateTimeOk = (
+    value: DatePickerProps["value"],
+    dateString: string
+  ) => {
     if (value) {
       setSelectedStartDateTime(dateString);
     }
   };
 
-  const onEndDateTimeOk = (value: DatePickerProps['value'], dateString: string) => {
+  const onEndDateTimeOk = (
+    value: DatePickerProps["value"],
+    dateString: string
+  ) => {
     if (value) {
       setSelectedEndDateTime(dateString);
     }
   };
 
-
   const handleShareSelectedDoc = async () => {
     try {
       const formData = new FormData();
       formData.append("documents", JSON.stringify(selectedItems));
-      formData.append("selected_document_ids", JSON.stringify(selectedItemsNames) || '');
-      formData.append("assigned_users", JSON.stringify(selectedUserIds) || '');
-      formData.append("assigned_roles", JSON.stringify(selectedRoleIds) || '');
-      formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
+      formData.append(
+        "selected_document_ids",
+        JSON.stringify(selectedItemsNames) || ""
+      );
+      formData.append("assigned_users", JSON.stringify(selectedUserIds) || "");
+      formData.append("assigned_roles", JSON.stringify(selectedRoleIds) || "");
+      formData.append(
+        "is_time_limited",
+        shareDocumentData?.is_time_limited || ""
+      );
       formData.append("start_date_time", selectedStartDateTime || "");
       formData.append("end_date_time", selectedEndDateTime || "");
       formData.append("user", userId || "");
 
-
-      const response = await postWithAuth(
-        `document-bulk-share`,
-        formData
-      );
+      const response = await postWithAuth(`document-bulk-share`, formData);
       setShareDocumentData(null);
-      setRoles([])
+      setRoles([]);
       setSelectedRoleIds([]);
-      setSelectedStartDateTime("")
-      setSelectedEndDateTime("")
-      setAllShareData([])
+      setSelectedStartDateTime("");
+      setSelectedEndDateTime("");
+      setAllShareData([]);
       if (response.status === "success") {
         setToastType("success");
         setToastMessage("Document bulk shared successfully!");
@@ -1730,7 +1772,7 @@ export default function AllDocTable() {
           setShowToast(false);
         }, 5000);
         handleCloseModal("shareAssignRoleModel");
-        setAllShareData([])
+        setAllShareData([]);
       } else if (response.status === "fail") {
         setToastType("error");
         setToastMessage("An error occurred while sharing the document bulk!");
@@ -1738,7 +1780,7 @@ export default function AllDocTable() {
         setTimeout(() => {
           setShowToast(false);
         }, 5000);
-        setAllShareData([])
+        setAllShareData([]);
       } else {
         setToastType("error");
         setToastMessage("An error occurred while sharing the document bulk!");
@@ -1774,14 +1816,14 @@ export default function AllDocTable() {
 
   const handleDeleteSelectedDoc = async () => {
     try {
-
-      console.log("JSON.stringify(selectedItems) : ", JSON.stringify(selectedItems))
+      console.log(
+        "JSON.stringify(selectedItems) : ",
+        JSON.stringify(selectedItems)
+      );
       const formData = new FormData();
       formData.append("documents", JSON.stringify(selectedItems));
 
-      const response = await postWithAuth(
-        `bulk-delete-documents`, formData
-      );
+      const response = await postWithAuth(`bulk-delete-documents`, formData);
 
       if (response.status === "success") {
         setToastType("success");
@@ -1792,7 +1834,7 @@ export default function AllDocTable() {
         }, 5000);
         fetchDocumentsData(setDummyData);
         handleCloseModal("deleteBulkFileModel");
-        setAllShareData([])
+        setAllShareData([]);
       } else if (response.status === "fail") {
         setToastType("error");
         setToastMessage("An error occurred while deleting the document bulk!");
@@ -1801,7 +1843,7 @@ export default function AllDocTable() {
           setShowToast(false);
         }, 5000);
         fetchDocumentsData(setDummyData);
-        setAllShareData([])
+        setAllShareData([]);
       } else {
         setToastType("error");
         setToastMessage("An error occurred while deleting the document bulk!");
@@ -1827,7 +1869,7 @@ export default function AllDocTable() {
     return <LoadingSpinner />;
   }
 
-  console.log("paginatedData : -- ", paginatedData)
+  console.log("paginatedData : -- ", paginatedData);
   return (
     <>
       <DashboardLayout>
@@ -1848,7 +1890,6 @@ export default function AllDocTable() {
                 <FaPlus className="me-1" /> Add Document
               </Link>
             )}
-
           </div>
         </div>
         <div className="d-flex flex-column bg-white p-2 p-lg-3 rounded mt-3 position-relative">
@@ -1879,14 +1920,17 @@ export default function AllDocTable() {
                     title={
                       filterData.category
                         ? categoryDropDownData.find(
-                          (item) => item.id.toString() === filterData.category
-                        )?.category_name
+                            (item) => item.id.toString() === filterData.category
+                          )?.category_name
                         : "Select Category"
                     }
                     className="custom-dropdown-text-start text-start w-100"
                     onSelect={(value) => handleCategorySelect(value || "")}
                   >
-                    <Dropdown.Item eventKey="" style={{ fontStyle: "italic", color: "gray" }}>
+                    <Dropdown.Item
+                      eventKey=""
+                      style={{ fontStyle: "italic", color: "gray" }}
+                    >
                       None
                     </Dropdown.Item>
 
@@ -1896,15 +1940,19 @@ export default function AllDocTable() {
                         eventKey={category.id.toString()}
                         style={{
                           fontWeight:
-                            category.parent_category === "none" ? "bold" : "normal",
-                          paddingLeft: category.parent_category === "none" ? "10px" : "20px",
+                            category.parent_category === "none"
+                              ? "bold"
+                              : "normal",
+                          paddingLeft:
+                            category.parent_category === "none"
+                              ? "10px"
+                              : "20px",
                         }}
                       >
                         {category.category_name}
                       </Dropdown.Item>
                     ))}
                   </DropdownButton>
-
                 </div>
               </div>
               <div className="col-12 col-lg-4 px-lg-2">
@@ -1917,10 +1965,16 @@ export default function AllDocTable() {
                     <Dropdown.Item onClick={() => handleStorageSelect("")}>
                       None
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStorageSelect("Local Disk (Default)")}>
+                    <Dropdown.Item
+                      onClick={() =>
+                        handleStorageSelect("Local Disk (Default)")
+                      }
+                    >
                       Local Disk (Default)
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleStorageSelect("Amazon S3")}>
+                    <Dropdown.Item
+                      onClick={() => handleStorageSelect("Amazon S3")}
+                    >
                       Amazon S3
                     </Dropdown.Item>
                   </DropdownButton>
@@ -1929,14 +1983,15 @@ export default function AllDocTable() {
               <div className="col-12 col-lg-4">
                 <div className="input-group mb-3 mb-lg-0">
                   {/* <DatePicker onChange={() => handleDateChange} /> */}
-                  <DatePicker placeholder="Created Date" onChange={handleDateChange} />
+                  <DatePicker
+                    placeholder="Created Date"
+                    onChange={handleDateChange}
+                  />
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            {isLoadingTable && <LoadingBar />}
-          </div>
+          <div>{isLoadingTable && <LoadingBar />}</div>
           <div>
             <div
               style={{ maxHeight: "350px", overflowY: "auto" }}
@@ -1970,29 +2025,54 @@ export default function AllDocTable() {
                           drop="end"
                           title={<FaEllipsisV />}
                           className="no-caret position-static dropdown-toggle-bulk"
-                          style={{ zIndex: "99999", padding: '0px !important', backgroundColor: "transparent", color: "#000" }}
+                          style={{
+                            zIndex: "99999",
+                            padding: "0px !important",
+                            backgroundColor: "transparent",
+                            color: "#000",
+                          }}
                         >
-                          {hasPermission(permissions, "All Documents", "Share Document") && (
-                            <Dropdown.Item onClick={() => handleOpenModal("allDocShareModel")} className="py-2">
+                          {hasPermission(
+                            permissions,
+                            "All Documents",
+                            "Share Document"
+                          ) && (
+                            <Dropdown.Item
+                              onClick={() =>
+                                handleOpenModal("allDocShareModel")
+                              }
+                              className="py-2"
+                            >
                               <IoShareSocial className="me-2" />
                               Share
                             </Dropdown.Item>
                           )}
-                          {hasPermission(permissions, "All Documents", "Delete Document") && (
+                          {hasPermission(
+                            permissions,
+                            "All Documents",
+                            "Delete Document"
+                          ) && (
                             <Dropdown.Item
-                              onClick={() => handleOpenModal("deleteBulkFileModel")}
+                              onClick={() =>
+                                handleOpenModal("deleteBulkFileModel")
+                              }
                               className="py-2"
                             >
                               <AiFillDelete className="me-2" />
                               Delete
                             </Dropdown.Item>
                           )}
-
                         </DropdownButton>
                       ) : (
                         <Checkbox
-                          checked={selectedItems.length === paginatedData.length && paginatedData.length > 0}
-                          indeterminate={selectedItems.length > 0 && selectedItems.length < paginatedData.length}
+                          checked={
+                            selectedItems.length === paginatedData.length &&
+                            paginatedData.length > 0
+                          }
+                          indeterminate={
+                            selectedItems.length > 0 &&
+                            selectedItems.length < paginatedData.length
+                          }
                           onChange={(e) => handleSelectAll(e.target.checked)}
                           style={{
                             display: "flex",
@@ -2024,7 +2104,8 @@ export default function AllDocTable() {
                 <tbody>
                   {paginatedData.length > 0 ? (
                     paginatedData.map((item) => (
-                      <tr key={item.id}
+                      <tr
+                        key={item.id}
                         onMouseEnter={() => setHoveredRow(item.id)}
                         onMouseLeave={() => setHoveredRow(null)}
                         onMouseMove={handleMouseMove}
@@ -2032,14 +2113,15 @@ export default function AllDocTable() {
                         <td>
                           <Checkbox
                             checked={selectedItems.includes(item.id)}
-                            onChange={() => handleCheckboxChange(item.id, item.name)}
+                            onChange={() =>
+                              handleCheckboxChange(item.id, item.name)
+                            }
                             style={{
                               display: "flex",
                               alignSelf: "center",
                               justifySelf: "center",
                             }}
                           />
-
                         </td>
                         <td>
                           <DropdownButton
@@ -2059,21 +2141,37 @@ export default function AllDocTable() {
                                 View
                               </Dropdown.Item>
                             )} */}
-                            {hasPermission(permissions, "All Documents", "View Documents") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "View Documents"
+                            ) && (
                               <Dropdown.Item
                                 className="py-2"
                                 onClick={() =>
-                                  handleOpenModal("viewModel", item.id, item.name)
+                                  handleOpenModal(
+                                    "viewModel",
+                                    item.id,
+                                    item.name
+                                  )
                                 }
                               >
                                 <IoEye className="me-2" />
                                 View
                               </Dropdown.Item>
                             )}
-                            {hasPermission(permissions, "All Documents", "Edit Document") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Edit Document"
+                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
-                                  handleOpenModal("editModel", item.id, item.name)
+                                  handleOpenModal(
+                                    "editModel",
+                                    item.id,
+                                    item.name
+                                  )
                                 }
                                 className="py-2"
                               >
@@ -2081,85 +2179,104 @@ export default function AllDocTable() {
                                 Edit
                               </Dropdown.Item>
                             )}
-                            {["pdf", "docx", "xlsx", "pptx", "txt"].includes(item.type) && (
-                              <Dropdown.Item
-                                onMouseEnter={(e) => {
-                                  setAnchorEl(e.currentTarget);
-                                  setShowSubMenu(true);
-                                }}
-                                onMouseLeave={() => {
-                                  setShowSubMenu(false);
-                                }}
-                                className="py-2 position-relative"
-                              >
-                                <Image src="/icons8-ai-48.png" alt="ai icon" width={16} height={16} className="me-2" />
-                                AI Options
-                                {showSubMenu && (
-                                  <div
-                                    onMouseEnter={() => setShowSubMenu(true)}
-                                    onMouseLeave={() => setShowSubMenu(false)}
-                                    className="position-absolute bg-white shadow rounded"
-                                    style={{ top: 0, left: "100%", zIndex: 100000, minWidth: "200px" }}
-                                  >
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        toggleChat({
-                                          documentId: item.id.toString(),
-                                          documentName: item.name,
-                                          action: "summarize",
-                                        })
-                                      }
+
+                            {["pdf", "docx", "xlsx", "pptx", "txt"].includes(
+                              item.type
+                            ) &&
+                              hasPermission(
+                                permissions,
+                                "All Documents",
+                                "Edit Document"
+                              ) && (
+                                <Dropdown.Item
+                                  onMouseEnter={(e) => {
+                                    setAnchorEl(e.currentTarget);
+                                    setShowSubMenu(true);
+                                  }}
+                                  onMouseLeave={() => {
+                                    setShowSubMenu(false);
+                                  }}
+                                  className="py-2 position-relative"
+                                >
+                                  <Image
+                                    src="/icons8-ai-48.png"
+                                    alt="ai icon"
+                                    width={16}
+                                    height={16}
+                                    className="me-2"
+                                  />
+                                  AI Options
+                                  {showSubMenu && (
+                                    <div
+                                      onMouseEnter={() => setShowSubMenu(true)}
+                                      onMouseLeave={() => setShowSubMenu(false)}
+                                      className="position-absolute bg-white shadow rounded"
+                                      style={{
+                                        top: 0,
+                                        left: "100%",
+                                        zIndex: 100000,
+                                        minWidth: "200px",
+                                      }}
                                     >
-                                      Summarize Document
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        toggleChat({
-                                          documentId: item.id.toString(),
-                                          documentName: item.name,
-                                          action: "generate",
-                                        })
-                                      }
-                                    >
-                                      Content Generation
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        toggleChat({
-                                          documentId: item.id.toString(),
-                                          documentName: item.name,
-                                          action: "qa",
-                                        })
-                                      }
-                                    >
-                                      Ask Questions
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        toggleChat({
-                                          documentId: item.id.toString(),
-                                          documentName: item.name,
-                                          action: "tone",
-                                        })
-                                      }
-                                    >
-                                      Sentiment Analysis
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        toggleChat({
-                                          documentId: item.id.toString(),
-                                          documentName: item.name,
-                                          action: "translate",
-                                        })
-                                      }
-                                    >
-                                      Translate Document
-                                    </Dropdown.Item>
-                                  </div>
-                                )}
-                              </Dropdown.Item>
-                            )}
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          toggleChat({
+                                            documentId: item.id.toString(),
+                                            documentName: item.name,
+                                            action: "summarize",
+                                          })
+                                        }
+                                      >
+                                        Summarize Document
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          toggleChat({
+                                            documentId: item.id.toString(),
+                                            documentName: item.name,
+                                            action: "generate",
+                                          })
+                                        }
+                                      >
+                                        Content Generation
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          toggleChat({
+                                            documentId: item.id.toString(),
+                                            documentName: item.name,
+                                            action: "qa",
+                                          })
+                                        }
+                                      >
+                                        Ask Questions
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          toggleChat({
+                                            documentId: item.id.toString(),
+                                            documentName: item.name,
+                                            action: "tone",
+                                          })
+                                        }
+                                      >
+                                        Sentiment Analysis
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          toggleChat({
+                                            documentId: item.id.toString(),
+                                            documentName: item.name,
+                                            action: "translate",
+                                          })
+                                        }
+                                      >
+                                        Translate Document
+                                      </Dropdown.Item>
+                                    </div>
+                                  )}
+                                </Dropdown.Item>
+                              )}
 
                             {/* <Dropdown.Item
                               onMouseEnter={(e) => {
@@ -2239,19 +2356,30 @@ export default function AllDocTable() {
                               )}
                             </Dropdown.Item> */}
 
-                            {hasPermission(permissions, "All Documents", "Share Document") && (
-                              <Dropdown.Item onClick={() =>
-                                handleOpenModal(
-                                  "shareDocumentModel",
-                                  item.id,
-                                  item.name
-                                )
-                              } className="py-2">
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Share Document"
+                            ) && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenModal(
+                                    "shareDocumentModel",
+                                    item.id,
+                                    item.name
+                                  )
+                                }
+                                className="py-2"
+                              >
                                 <IoShareSocial className="me-2" />
                                 Share
                               </Dropdown.Item>
                             )}
-                            {hasPermission(permissions, "All Documents", "Manage Sharable Link") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Manage Sharable Link"
+                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
                                   handleGetShareableLinkModel(item.id)
@@ -2262,59 +2390,86 @@ export default function AllDocTable() {
                                 Get Shareable Link
                               </Dropdown.Item>
                             )}
-                            {hasPermission(permissions, "All Documents", "Download Document") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Download Document"
+                            ) && (
                               <Dropdown.Item className="py-2">
                                 <Link
                                   href={"#"}
                                   style={{ color: "#212529" }}
-                                  onClick={() => handleDownload(item.id, userId)}
+                                  onClick={() =>
+                                    handleDownload(item.id, userId)
+                                  }
                                 >
                                   <MdFileDownload className="me-2" />
                                   Download
                                 </Link>
                               </Dropdown.Item>
                             )}
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "uploadNewVersionFileModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <MdUpload className="me-2" />
-                              Upload New Version file
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "versionHistoryModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <GoHistory className="me-2" />
-                              Version History
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "commentModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <BiSolidCommentDetail className="me-2" />
-                              Comment
-                            </Dropdown.Item>
-
-                            {hasPermission(permissions, "All Documents", "Add Reminder") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Upload New Version file"
+                            ) && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenModal(
+                                    "uploadNewVersionFileModel",
+                                    item.id,
+                                    item.name
+                                  )
+                                }
+                                className="py-2"
+                              >
+                                <MdUpload className="me-2" />
+                                Upload New Version file
+                              </Dropdown.Item>
+                            )}
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Version History"
+                            ) && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenModal(
+                                    "versionHistoryModel",
+                                    item.id,
+                                    item.name
+                                  )
+                                }
+                                className="py-2"
+                              >
+                                <GoHistory className="me-2" />
+                                Version History
+                              </Dropdown.Item>
+                            )}
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Comment"
+                            ) && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenModal(
+                                    "commentModel",
+                                    item.id,
+                                    item.name
+                                  )
+                                }
+                                className="py-2"
+                              >
+                                <BiSolidCommentDetail className="me-2" />
+                                Comment
+                              </Dropdown.Item>
+                            )}
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Add Reminder"
+                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
                                   handleOpenModal(
@@ -2329,7 +2484,11 @@ export default function AllDocTable() {
                                 Add Reminder
                               </Dropdown.Item>
                             )}
-                            {hasPermission(permissions, "All Documents", "Send Email") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Send Email"
+                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
                                   handleOpenModal(
@@ -2344,21 +2503,30 @@ export default function AllDocTable() {
                                 Send Email
                               </Dropdown.Item>
                             )}
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleOpenModal(
-                                  "removeIndexingModel",
-                                  item.id,
-                                  item.name
-                                )
-                              }
-                              className="py-2"
-                            >
-                              <AiOutlineZoomOut className="me-2" />
-                              Remove From Search
-                            </Dropdown.Item>
-
-                            {hasPermission(permissions, "All Documents", "Archive Document") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Download Document"
+                            ) && (
+                              <Dropdown.Item
+                                onClick={() =>
+                                  handleOpenModal(
+                                    "removeIndexingModel",
+                                    item.id,
+                                    item.name
+                                  )
+                                }
+                                className="py-2"
+                              >
+                                <AiOutlineZoomOut className="me-2" />
+                                Remove From Search
+                              </Dropdown.Item>
+                            )}
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Archive Document"
+                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
                                   handleOpenModal(
@@ -2373,7 +2541,11 @@ export default function AllDocTable() {
                                 Archive
                               </Dropdown.Item>
                             )}
-                            {hasPermission(permissions, "All Documents", "Delete Document") && (
+                            {hasPermission(
+                              permissions,
+                              "All Documents",
+                              "Delete Document"
+                            ) && (
                               <Dropdown.Item
                                 onClick={() =>
                                   handleOpenModal(
@@ -2388,7 +2560,6 @@ export default function AllDocTable() {
                                 Delete
                               </Dropdown.Item>
                             )}
-
                           </DropdownButton>
                         </td>
                         {/* <td>
@@ -2431,7 +2602,7 @@ export default function AllDocTable() {
                                 maxHeight: "200px",
                                 maxWidth: "200px",
                                 zIndex: 1000,
-                                overflow: "hidden"
+                                overflow: "hidden",
                               }}
                             >
                               <Image
@@ -2509,7 +2680,7 @@ export default function AllDocTable() {
           onHide={() => {
             handleCloseModal("editModel");
             setSelectedDocumentId(null);
-            setMetaTags([])
+            setMetaTags([]);
           }}
         >
           <Modal.Header>
@@ -2523,7 +2694,10 @@ export default function AllDocTable() {
                 <IoClose
                   fontSize={20}
                   style={{ cursor: "pointer" }}
-                  onClick={() => { handleCloseModal("editModel"); setMetaTags([]) }}
+                  onClick={() => {
+                    handleCloseModal("editModel");
+                    setMetaTags([]);
+                  }}
                 />
               </div>
             </div>
@@ -2597,7 +2771,10 @@ export default function AllDocTable() {
                 Meta tags
               </p>
               <div className="col-12">
-                <div style={{ marginBottom: "10px" }} className="w-100 d-flex metaBorder ">
+                <div
+                  style={{ marginBottom: "10px" }}
+                  className="w-100 d-flex metaBorder "
+                >
                   <input
                     type="text"
                     value={currentMeta}
@@ -2610,7 +2787,7 @@ export default function AllDocTable() {
                       border: "1px solid #ccc",
                       borderTopRightRadius: "0 !important",
                       borderBottomRightRadius: "0 !important",
-                      backgroundColor: 'transparent',
+                      backgroundColor: "transparent",
                       color: "#333",
                     }}
                   />
@@ -2649,7 +2826,7 @@ export default function AllDocTable() {
                         style={{
                           flex: 1,
                           borderRadius: "0px",
-                          backgroundColor: 'transparent',
+                          backgroundColor: "transparent",
                           border: "1px solid #ccc",
                           color: "#333",
                           padding: "6px 10px",
@@ -2667,7 +2844,7 @@ export default function AllDocTable() {
                           borderTopRightRadius: "4px",
                           borderBottomRightRadius: "4px",
                           cursor: "pointer",
-                          height: "34px"
+                          height: "34px",
                         }}
                       >
                         <IoTrashOutline />
@@ -2677,7 +2854,6 @@ export default function AllDocTable() {
                 </div>
               </div>
             </div>
-
           </Modal.Body>
 
           <Modal.Footer>
@@ -2692,7 +2868,7 @@ export default function AllDocTable() {
                 onClick={() => {
                   handleCloseModal("editModel");
                   setSelectedDocumentId(null);
-                  setMetaTags([])
+                  setMetaTags([]);
                 }}
                 className="custom-icon-button button-danger text-white bg-danger px-3 py-1 rounded"
               >
@@ -2741,7 +2917,6 @@ export default function AllDocTable() {
                   >
                     Is Link Valid until:
                   </p>
-
                 </Checkbox>
                 {Boolean(shareableLinkData.has_expire_date) && (
                   <div className="d-flex flex-column gap-2 mb-3">
@@ -2749,16 +2924,25 @@ export default function AllDocTable() {
                       showTime
                       className={`w-100`}
                       onChange={(value, dateString) => {
-                        handleShareInputChange("expire_date_time", `${dateString}`)
+                        handleShareInputChange(
+                          "expire_date_time",
+                          `${dateString}`
+                        );
                       }}
-                      onOk={(value) => onDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
+                      onOk={(value) =>
+                        onDateTimeOk(
+                          value,
+                          value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                        )
+                      }
                     />
                     {errors.expire_date_time && (
-                      <div className="invalid-feedback">{errors.expire_date_time}</div>
+                      <div className="invalid-feedback">
+                        {errors.expire_date_time}
+                      </div>
                     )}
                   </div>
                 )}
-
               </div>
               <div className="d-flex flex-column">
                 <Checkbox
@@ -2772,7 +2956,6 @@ export default function AllDocTable() {
                   >
                     Is password required:
                   </p>
-
                 </Checkbox>
 
                 {Boolean(shareableLinkData.has_password) && (
@@ -2790,7 +2973,6 @@ export default function AllDocTable() {
                     )}
                   </div>
                 )}
-
               </div>
               <Checkbox
                 checked={shareableLinkData.allow_download}
@@ -2803,9 +2985,7 @@ export default function AllDocTable() {
                 >
                   Users with link can download this item
                 </p>
-
               </Checkbox>
-
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -2840,7 +3020,9 @@ export default function AllDocTable() {
                 <IoClose
                   fontSize={20}
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleCloseModal("generatedShareableLinkModel")}
+                  onClick={() =>
+                    handleCloseModal("generatedShareableLinkModel")
+                  }
                 />
               </div>
             </div>
@@ -2972,10 +3154,15 @@ export default function AllDocTable() {
                 <div className="d-flex flex-column">
                   <Checkbox
                     checked={shareableLinkDataSetting.has_expire_date}
-                    onChange={() => handleShareSettingCheckboxChange("has_expire_date")}
+                    onChange={() =>
+                      handleShareSettingCheckboxChange("has_expire_date")
+                    }
                     className="me-2 mb-2"
                   >
-                    <p className="mb-0 text-start w-100" style={{ fontSize: "14px" }}>
+                    <p
+                      className="mb-0 text-start w-100"
+                      style={{ fontSize: "14px" }}
+                    >
                       Is Link Valid until:
                     </p>
                   </Checkbox>
@@ -2995,33 +3182,48 @@ export default function AllDocTable() {
                         className="w-100"
                         defaultValue={
                           shareableLinkDataSetting.expire_date_time
-                            ? dayjs(shareableLinkDataSetting.expire_date_time, "YYYY-MM-DD HH:mm:ss")
+                            ? dayjs(
+                                shareableLinkDataSetting.expire_date_time,
+                                "YYYY-MM-DD HH:mm:ss"
+                              )
                             : null
                         }
                         onChange={(value, dateString) => {
                           if (typeof dateString === "string") {
-                            handleShareSettingInputChange("expire_date_time", dateString);
+                            handleShareSettingInputChange(
+                              "expire_date_time",
+                              dateString
+                            );
                           }
                         }}
-                        onOk={(value) => onDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
+                        onOk={(value) =>
+                          onDateTimeOk(
+                            value,
+                            value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                          )
+                        }
                       />
 
-
                       {errors.expire_date_time && (
-                        <div className="invalid-feedback">{errors.expire_date_time}</div>
+                        <div className="invalid-feedback">
+                          {errors.expire_date_time}
+                        </div>
                       )}
                     </div>
                   )}
-
-
                 </div>
                 <div className="d-flex flex-column">
                   <Checkbox
                     checked={shareableLinkDataSetting.has_password}
-                    onChange={() => handleShareSettingCheckboxChange("has_password")}
+                    onChange={() =>
+                      handleShareSettingCheckboxChange("has_password")
+                    }
                     className="me-2 mb-2"
                   >
-                    <p className="mb-0 text-start w-100" style={{ fontSize: "14px" }}>
+                    <p
+                      className="mb-0 text-start w-100"
+                      style={{ fontSize: "14px" }}
+                    >
                       Is password required:
                     </p>
                   </Checkbox>
@@ -3033,26 +3235,34 @@ export default function AllDocTable() {
                         className={errors.password ? "is-invalid" : ""}
                         value={shareableLinkDataSetting.password}
                         onChange={(e) =>
-                          handleShareSettingInputChange("password", e.target.value)
+                          handleShareSettingInputChange(
+                            "password",
+                            e.target.value
+                          )
                         }
                       />
                       {errors.password && (
-                        <div className="invalid-feedback">{errors.password}</div>
+                        <div className="invalid-feedback">
+                          {errors.password}
+                        </div>
                       )}
                     </div>
                   )}
-
                 </div>
                 <Checkbox
                   checked={shareableLinkDataSetting.allow_download}
-                  onChange={() => handleShareSettingCheckboxChange("allow_download")}
+                  onChange={() =>
+                    handleShareSettingCheckboxChange("allow_download")
+                  }
                   className="me-2"
                 >
-                  <p className="mb-0 text-start w-100" style={{ fontSize: "14px" }}>
+                  <p
+                    className="mb-0 text-start w-100"
+                    style={{ fontSize: "14px" }}
+                  >
                     Users with link can download this item
                   </p>
                 </Checkbox>
-
               </div>
             </div>
           </Modal.Body>
@@ -3136,7 +3346,8 @@ export default function AllDocTable() {
                   className="mb-0 text-danger"
                   style={{ fontSize: "18px", color: "#333" }}
                 >
-                  Are you sure you want to delete? {selectedDocumentName || "No document selected"}
+                  Are you sure you want to delete?{" "}
+                  {selectedDocumentName || "No document selected"}
                 </p>
               </div>
               <div className="col-1 d-flex justify-content-end">
@@ -3200,7 +3411,8 @@ export default function AllDocTable() {
                   className="mb-1 text-danger"
                   style={{ fontSize: "16px", color: "#333" }}
                 >
-                  Are you sure want to remove document page indexing ? {selectedDocumentName || "No document selected"}
+                  Are you sure want to remove document page indexing ?{" "}
+                  {selectedDocumentName || "No document selected"}
                 </p>
               </div>
               <div className="col-1">
@@ -3408,8 +3620,8 @@ export default function AllDocTable() {
               <div className="col-11 d-flex flex-row">
                 <IoFolder fontSize={20} className="me-2" />
                 <p className="mb-0" style={{ fontSize: "16px", color: "#333" }}>
-                  {selectedDocumentName || "No document selected"}{" "}
-                  : VERSION_HISTORY
+                  {selectedDocumentName || "No document selected"} :
+                  VERSION_HISTORY
                 </p>
               </div>
               <div className="col-1 d-flex justify-content-end">
@@ -3641,8 +3853,8 @@ export default function AllDocTable() {
             handleCloseModal("addReminderModel");
             setSelectedDocumentId(null);
             setSelectedDocumentName(null);
-            setSelectedRoleIds([])
-            setRoles([])
+            setSelectedRoleIds([]);
+            setRoles([]);
           }}
         >
           <Modal.Header>
@@ -3662,9 +3874,7 @@ export default function AllDocTable() {
             </div>
           </Modal.Header>
           <Modal.Body className="py-3 ">
-            <div
-              className="d-flex flex-column mb-3 custom-scroll"
-            >
+            <div className="d-flex flex-column mb-3 custom-scroll">
               <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
                 Subject
               </p>
@@ -3786,7 +3996,6 @@ export default function AllDocTable() {
                       >
                         Send Email
                       </p>
-
                     </Checkbox>
                   </label>
                   <div className=" d-flex flex-column position-relative w-100">
@@ -3922,7 +4131,15 @@ export default function AllDocTable() {
                       </div>
                       {addReminder?.frequency === "Daily" && (
                         <div className=" my-3">
-                          {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+                          {[
+                            "Sunday",
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                          ].map((day) => (
                             <label key={day}>
                               <Checkbox
                                 value={day}
@@ -3930,7 +4147,10 @@ export default function AllDocTable() {
                                 onChange={() => handleDailyCheckboxChange(day)}
                                 className="me-2"
                               >
-                                <p className="mb-0 text-start w-100" style={{ fontSize: "14px" }}>
+                                <p
+                                  className="mb-0 text-start w-100"
+                                  style={{ fontSize: "14px" }}
+                                >
                                   {day}
                                 </p>
                               </Checkbox>
@@ -3954,7 +4174,13 @@ export default function AllDocTable() {
                               "Friday",
                               "Saturday",
                             ].map((day) => (
-                              <label key={day} style={{ display: "block", marginBottom: "5px" }}>
+                              <label
+                                key={day}
+                                style={{
+                                  display: "block",
+                                  marginBottom: "5px",
+                                }}
+                              >
                                 <Radio value={day}>{day}</Radio>
                               </label>
                             ))}
@@ -3966,8 +4192,12 @@ export default function AllDocTable() {
                         <div className="my-4">
                           <div className="d-none d-lg-flex flex-column flex-lg-row">
                             <div className="col-12 col-lg-2 p-1"></div>
-                            <div className="col-12 col-lg-5 p-1">Select Reminder Month</div>
-                            <div className="col-12 col-lg-5 p-1">Select Reminder Day</div>
+                            <div className="col-12 col-lg-5 p-1">
+                              Select Reminder Month
+                            </div>
+                            <div className="col-12 col-lg-5 p-1">
+                              Select Reminder Day
+                            </div>
                           </div>
 
                           {/* Jan - Jun */}
@@ -3976,11 +4206,27 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={halfMonths.find(item => item.period === "Jan - Jun")?.month || "Select Month"}
+                                title={
+                                  halfMonths.find(
+                                    (item) => item.period === "Jan - Jun"
+                                  )?.month || "Select Month"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(month) => handleHalfMonthChange("Jan - Jun", month || "")}
+                                onSelect={(month) =>
+                                  handleHalfMonthChange(
+                                    "Jan - Jun",
+                                    month || ""
+                                  )
+                                }
                               >
-                                {["January", "February", "March", "April", "May", "June"].map((month) => (
+                                {[
+                                  "January",
+                                  "February",
+                                  "March",
+                                  "April",
+                                  "May",
+                                  "June",
+                                ].map((month) => (
                                   <Dropdown.Item key={month} eventKey={month}>
                                     {month}
                                   </Dropdown.Item>
@@ -3990,11 +4236,23 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={halfMonths.find(item => item.period === "Jan - Jun")?.date || "Select Date"}
+                                title={
+                                  halfMonths.find(
+                                    (item) => item.period === "Jan - Jun"
+                                  )?.date || "Select Date"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(date) => handleHalfMonthDateChange("Jan - Jun", date || "")}
+                                onSelect={(date) =>
+                                  handleHalfMonthDateChange(
+                                    "Jan - Jun",
+                                    date || ""
+                                  )
+                                }
                               >
-                                {Array.from({ length: 31 }, (_, index) => index + 1).map((date) => (
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, index) => index + 1
+                                ).map((date) => (
                                   <Dropdown.Item key={date} eventKey={date}>
                                     {date}
                                   </Dropdown.Item>
@@ -4009,11 +4267,27 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={halfMonths.find(item => item.period === "Jun - Dec")?.month || "Select Month"}
+                                title={
+                                  halfMonths.find(
+                                    (item) => item.period === "Jun - Dec"
+                                  )?.month || "Select Month"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(month) => handleHalfMonthChange("Jun - Dec", month || "")}
+                                onSelect={(month) =>
+                                  handleHalfMonthChange(
+                                    "Jun - Dec",
+                                    month || ""
+                                  )
+                                }
                               >
-                                {["July", "August", "September", "October", "November", "December"].map((month) => (
+                                {[
+                                  "July",
+                                  "August",
+                                  "September",
+                                  "October",
+                                  "November",
+                                  "December",
+                                ].map((month) => (
                                   <Dropdown.Item key={month} eventKey={month}>
                                     {month}
                                   </Dropdown.Item>
@@ -4023,16 +4297,27 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={halfMonths.find(item => item.period === "Jun - Dec")?.date || "Select Date"}
+                                title={
+                                  halfMonths.find(
+                                    (item) => item.period === "Jun - Dec"
+                                  )?.date || "Select Date"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(date) => handleHalfMonthDateChange("Jun - Dec", date || "")}
+                                onSelect={(date) =>
+                                  handleHalfMonthDateChange(
+                                    "Jun - Dec",
+                                    date || ""
+                                  )
+                                }
                               >
-                                {Array.from({ length: 31 }, (_, index) => index + 1).map((date) => (
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, index) => index + 1
+                                ).map((date) => (
                                   <Dropdown.Item key={date} eventKey={date}>
                                     {date}
                                   </Dropdown.Item>
                                 ))}
-
                               </DropdownButton>
                             </div>
                           </div>
@@ -4056,25 +4341,48 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Jan - Mar")?.month || "Select Month"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Jan - Mar"
+                                  )?.month || "Select Month"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(month) => handleQuarterMonthChange("Jan - Mar", month || "")}
+                                onSelect={(month) =>
+                                  handleQuarterMonthChange(
+                                    "Jan - Mar",
+                                    month || ""
+                                  )
+                                }
                               >
-                                {["January", "February", "March"].map((month) => (
-                                  <Dropdown.Item key={month} eventKey={month}>
-                                    {month}
-                                  </Dropdown.Item>
-                                ))}
+                                {["January", "February", "March"].map(
+                                  (month) => (
+                                    <Dropdown.Item key={month} eventKey={month}>
+                                      {month}
+                                    </Dropdown.Item>
+                                  )
+                                )}
                               </DropdownButton>
                             </div>
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Jan - Mar")?.date || "Select Date"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Jan - Mar"
+                                  )?.date || "Select Date"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(date) => handleQuarterMonthDateChange("Jan - Mar", date || "")}
+                                onSelect={(date) =>
+                                  handleQuarterMonthDateChange(
+                                    "Jan - Mar",
+                                    date || ""
+                                  )
+                                }
                               >
-                                {Array.from({ length: 31 }, (_, index) => index + 1).map((date) => (
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, index) => index + 1
+                                ).map((date) => (
                                   <Dropdown.Item key={date} eventKey={date}>
                                     {date}
                                   </Dropdown.Item>
@@ -4088,9 +4396,18 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Apr - Jun")?.month || "Select Month"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Apr - Jun"
+                                  )?.month || "Select Month"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(month) => handleQuarterMonthChange("Apr - Jun", month || "")}
+                                onSelect={(month) =>
+                                  handleQuarterMonthChange(
+                                    "Apr - Jun",
+                                    month || ""
+                                  )
+                                }
                               >
                                 {["April", "May", "June"].map((month) => (
                                   <Dropdown.Item key={month} eventKey={month}>
@@ -4102,11 +4419,23 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Apr - Jun")?.date || "Select Date"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Apr - Jun"
+                                  )?.date || "Select Date"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(date) => handleQuarterMonthDateChange("Apr - Jun", date || "")}
+                                onSelect={(date) =>
+                                  handleQuarterMonthDateChange(
+                                    "Apr - Jun",
+                                    date || ""
+                                  )
+                                }
                               >
-                                {Array.from({ length: 31 }, (_, index) => index + 1).map((date) => (
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, index) => index + 1
+                                ).map((date) => (
                                   <Dropdown.Item key={date} eventKey={date}>
                                     {date}
                                   </Dropdown.Item>
@@ -4120,25 +4449,48 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Jul - Sep")?.month || "Select Month"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Jul - Sep"
+                                  )?.month || "Select Month"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(month) => handleQuarterMonthChange("Jul - Sep", month || "")}
+                                onSelect={(month) =>
+                                  handleQuarterMonthChange(
+                                    "Jul - Sep",
+                                    month || ""
+                                  )
+                                }
                               >
-                                {["July", "August", "September"].map((month) => (
-                                  <Dropdown.Item key={month} eventKey={month}>
-                                    {month}
-                                  </Dropdown.Item>
-                                ))}
+                                {["July", "August", "September"].map(
+                                  (month) => (
+                                    <Dropdown.Item key={month} eventKey={month}>
+                                      {month}
+                                    </Dropdown.Item>
+                                  )
+                                )}
                               </DropdownButton>
                             </div>
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Jul - Sep")?.date || "Select Date"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Jul - Sep"
+                                  )?.date || "Select Date"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(date) => handleQuarterMonthDateChange("Jul - Sep", date || "")}
+                                onSelect={(date) =>
+                                  handleQuarterMonthDateChange(
+                                    "Jul - Sep",
+                                    date || ""
+                                  )
+                                }
                               >
-                                {Array.from({ length: 31 }, (_, index) => index + 1).map((date) => (
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, index) => index + 1
+                                ).map((date) => (
                                   <Dropdown.Item key={date} eventKey={date}>
                                     {date}
                                   </Dropdown.Item>
@@ -4152,25 +4504,48 @@ export default function AllDocTable() {
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Oct - Dec")?.month || "Select Month"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Oct - Dec"
+                                  )?.month || "Select Month"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(month) => handleQuarterMonthChange("Oct - Dec", month || "")}
+                                onSelect={(month) =>
+                                  handleQuarterMonthChange(
+                                    "Oct - Dec",
+                                    month || ""
+                                  )
+                                }
                               >
-                                {["October", "November", "December"].map((month) => (
-                                  <Dropdown.Item key={month} eventKey={month}>
-                                    {month}
-                                  </Dropdown.Item>
-                                ))}
+                                {["October", "November", "December"].map(
+                                  (month) => (
+                                    <Dropdown.Item key={month} eventKey={month}>
+                                      {month}
+                                    </Dropdown.Item>
+                                  )
+                                )}
                               </DropdownButton>
                             </div>
                             <div className="col-12 col-lg-5 p-1">
                               <DropdownButton
                                 id="dropdown-category-button"
-                                title={quarterMonths.find(item => item.period === "Oct - Dec")?.date || "Select Date"}
+                                title={
+                                  quarterMonths.find(
+                                    (item) => item.period === "Oct - Dec"
+                                  )?.date || "Select Date"
+                                }
                                 className="custom-dropdown-text-start text-start w-100"
-                                onSelect={(date) => handleQuarterMonthDateChange("Oct - Dec", date || "")}
+                                onSelect={(date) =>
+                                  handleQuarterMonthDateChange(
+                                    "Oct - Dec",
+                                    date || ""
+                                  )
+                                }
                               >
-                                {Array.from({ length: 31 }, (_, index) => index + 1).map((date) => (
+                                {Array.from(
+                                  { length: 31 },
+                                  (_, index) => index + 1
+                                ).map((date) => (
                                   <Dropdown.Item key={date} eventKey={date}>
                                     {date}
                                   </Dropdown.Item>
@@ -4196,7 +4571,12 @@ export default function AllDocTable() {
                           onChange={(value, dateString) => {
                             setSelectedStartDateTime(dateString.toString());
                           }}
-                          onOk={(value) => onStartDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
+                          onOk={(value) =>
+                            onStartDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
                         />
                       </div>
                       <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
@@ -4213,7 +4593,12 @@ export default function AllDocTable() {
                           onChange={(value, dateString) => {
                             setSelectedEndDateTime(dateString.toString());
                           }}
-                          onOk={(value) => onEndDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
+                          onOk={(value) =>
+                            onEndDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
                         />
                       </div>
                     </div>
@@ -4235,7 +4620,12 @@ export default function AllDocTable() {
                         onChange={(value, dateString) => {
                           setSelectedDateTime(dateString.toString());
                         }}
-                        onOk={(value) => onDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
+                        onOk={(value) =>
+                          onDateTimeOk(
+                            value,
+                            value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                          )
+                        }
                       />
                     </div>
                   </div>
@@ -4282,7 +4672,6 @@ export default function AllDocTable() {
             </div>
           </Modal.Header>
           <Modal.Body className="py-3 ">
-
             <div
               className="d-flex flex-column custom-scroll mb-3  px-2"
               style={{ maxHeight: "400px", overflowY: "auto" }}
@@ -4293,30 +4682,26 @@ export default function AllDocTable() {
 
               <div className="d-flex flex-column flex-sm-row mt-2 mb-4">
                 <button
-                  onClick={() =>
-                    handleOpenModal(
-                      "shareAssignUserModel"
-                    )
-                  }
+                  onClick={() => handleOpenModal("shareAssignUserModel")}
                   className="custom-icon-button button-success px-3 py-1 rounded me-lg-2 mb-2 mb-lg-0"
                 >
-                  <IoAdd fontSize={16} className="me-1" /> Assign/share with users
+                  <IoAdd fontSize={16} className="me-1" /> Assign/share with
+                  users
                 </button>
                 <button
-                  onClick={() =>
-                    handleOpenModal(
-                      "shareAssignRoleModel"
-                    )
-                  }
+                  onClick={() => handleOpenModal("shareAssignRoleModel")}
                   className="custom-icon-button button-success px-3 py-1 rounded me-lg-2 mb-2 mb-lg-0"
                 >
-                  <IoAdd fontSize={16} className="ms-1" /> Assign/share with roles
+                  <IoAdd fontSize={16} className="ms-1" /> Assign/share with
+                  roles
                 </button>
               </div>
 
-
               <div className="input-group mb-2">
-                <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                <p
+                  className="mb-1 text-start w-100"
+                  style={{ fontSize: "14px" }}
+                >
                   Filter
                 </p>
                 <input
@@ -4357,7 +4742,7 @@ export default function AllDocTable() {
                             </button>
                           </td>
                           <td>{item.type}</td>
-                          <td>{item.allow_download === 1 ? 'Yes' : 'No'}</td>
+                          <td>{item.allow_download === 1 ? "Yes" : "No"}</td>
                           <td>{item.name}</td>
                           <td>{item.email}</td>
                           <td>
@@ -4365,9 +4750,12 @@ export default function AllDocTable() {
                               "en-GB"
                             )}
                           </td>
-                          <td> {new Date(item.end_date_time).toLocaleDateString(
-                            "en-GB"
-                          )}</td>
+                          <td>
+                            {" "}
+                            {new Date(item.end_date_time).toLocaleDateString(
+                              "en-GB"
+                            )}
+                          </td>
                         </tr>
                       ))
                     ) : (
@@ -4395,7 +4783,10 @@ export default function AllDocTable() {
                     </Form.Select>
                   </div>
                   <div className="d-flex flex-row align-items-center px-lg-5">
-                    <div className="pagination-info" style={{ fontSize: "14px" }}>
+                    <div
+                      className="pagination-info"
+                      style={{ fontSize: "14px" }}
+                    >
                       {startIndexShare} – {endIndexShare} of {totalItemsShare}
                     </div>
 
@@ -4421,7 +4812,7 @@ export default function AllDocTable() {
           show={modalStates.shareAssignUserModel}
           onHide={() => {
             handleCloseModal("shareAssignUserModel");
-            setUsers([])
+            setUsers([]);
             setSelectedUserIds([]);
           }}
         >
@@ -4437,28 +4828,24 @@ export default function AllDocTable() {
                   fontSize={20}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    handleCloseModal("shareAssignUserModel")
-                    setUsers([])
+                    handleCloseModal("shareAssignUserModel");
+                    setUsers([]);
                     setSelectedUserIds([]);
-                    setShareDocumentData(null)
+                    setShareDocumentData(null);
                   }}
                 />
               </div>
             </div>
           </Modal.Header>
           <Modal.Body className="py-3 ">
-            <div
-              className="d-flex flex-column custom-scroll mb-3"
-            >
+            <div className="d-flex flex-column custom-scroll mb-3">
               <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
                 Users
               </p>
               <div className=" d-flex flex-column position-relative w-100">
                 <DropdownButton
                   id="dropdown-category-button-2"
-                  title={
-                    users.length > 0 ? users.join(", ") : "Select Users"
-                  }
+                  title={users.length > 0 ? users.join(", ") : "Select Users"}
                   className="custom-dropdown-text-start text-start w-100"
                   onSelect={(value) => {
                     if (value) handleUserSelect(value);
@@ -4471,9 +4858,7 @@ export default function AllDocTable() {
                       </Dropdown.Item>
                     ))
                   ) : (
-                    <Dropdown.Item disabled>
-                      No users available
-                    </Dropdown.Item>
+                    <Dropdown.Item disabled>No users available</Dropdown.Item>
                   )}
                 </DropdownButton>
 
@@ -4503,10 +4888,10 @@ export default function AllDocTable() {
                           ...(prev || {
                             type: "",
                             assigned_roles_or_users: "",
-                            is_time_limited: '',
+                            is_time_limited: "",
                             end_date_time: "",
                             start_date_time: "",
-                            is_downloadable: ""
+                            is_downloadable: "",
                           }),
                           is_time_limited: e.target.checked ? "1" : "0",
                         }))
@@ -4523,46 +4908,54 @@ export default function AllDocTable() {
                   </label>
                 </div>
                 <div className="d-flex flex-column">
-                  {
-                    shareDocumentData?.is_time_limited && (
-                      <div className="d-flex flex-column flex-md-row">
-                        <div className="col-12 col-lg-6 d-flex flex-column pe-lg-1">
-                          <label className="d-flex flex-column w-100">
-                            <p
-                              className="mb-1 text-start w-100"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Reminder Start Date
-                            </p>
-                          </label>
-                          <DatePicker
-                            showTime
-                            onChange={(value, dateString) => {
-                              setSelectedStartDateTime(dateString.toString());
-                            }}
-                            onOk={(value) => onStartDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
-                          />
-                        </div>
-                        <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
-                          <label className="d-flex flex-column w-100">
-                            <p
-                              className="mb-1 text-start w-100"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Reminder End Date
-                            </p>
-                          </label>
-                          <DatePicker
-                            showTime
-                            onChange={(value, dateString) => {
-                              setSelectedEndDateTime(dateString.toString());
-                            }}
-                            onOk={(value) => onEndDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
-                          />
-                        </div>
+                  {shareDocumentData?.is_time_limited && (
+                    <div className="d-flex flex-column flex-md-row">
+                      <div className="col-12 col-lg-6 d-flex flex-column pe-lg-1">
+                        <label className="d-flex flex-column w-100">
+                          <p
+                            className="mb-1 text-start w-100"
+                            style={{ fontSize: "14px" }}
+                          >
+                            Reminder Start Date
+                          </p>
+                        </label>
+                        <DatePicker
+                          showTime
+                          onChange={(value, dateString) => {
+                            setSelectedStartDateTime(dateString.toString());
+                          }}
+                          onOk={(value) =>
+                            onStartDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
+                        />
                       </div>
-                    )
-                  }
+                      <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
+                        <label className="d-flex flex-column w-100">
+                          <p
+                            className="mb-1 text-start w-100"
+                            style={{ fontSize: "14px" }}
+                          >
+                            Reminder End Date
+                          </p>
+                        </label>
+                        <DatePicker
+                          showTime
+                          onChange={(value, dateString) => {
+                            setSelectedEndDateTime(dateString.toString());
+                          }}
+                          onOk={(value) =>
+                            onEndDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-12">
@@ -4574,10 +4967,10 @@ export default function AllDocTable() {
                         ...(prev || {
                           type: "",
                           assigned_roles_or_users: "",
-                          is_time_limited: '',
+                          is_time_limited: "",
                           end_date_time: "",
                           start_date_time: "",
-                          is_downloadable: ""
+                          is_downloadable: "",
                         }),
                         is_downloadable: e.target.checked ? "1" : "0",
                       }))
@@ -4594,14 +4987,13 @@ export default function AllDocTable() {
                 </label>
               </div>
             </div>
-
           </Modal.Body>
           <Modal.Footer>
             <div className="d-flex flex-row">
               <button
                 onClick={() => {
-                  handleShareUserDocument(selectedDocumentId!, userId!)
-                  fetchShareDocumentData(selectedDocumentId!)
+                  handleShareUserDocument(selectedDocumentId!, userId!);
+                  fetchShareDocumentData(selectedDocumentId!);
                 }}
                 className="custom-icon-button button-success px-3 py-1 rounded me-2"
               >
@@ -4609,9 +5001,9 @@ export default function AllDocTable() {
               </button>
               <button
                 onClick={() => {
-                  handleCloseModal("shareAssignUserModel")
-                  setShareDocumentData(null)
-                  setUsers([])
+                  handleCloseModal("shareAssignUserModel");
+                  setShareDocumentData(null);
+                  setUsers([]);
                   setSelectedUserIds([]);
                 }}
                 className="custom-icon-button button-danger px-3 py-1 rounded me-2"
@@ -4627,7 +5019,7 @@ export default function AllDocTable() {
           show={modalStates.shareAssignRoleModel}
           onHide={() => {
             handleCloseModal("shareAssignRoleModel");
-            setRoles([])
+            setRoles([]);
             setSelectedRoleIds([]);
           }}
         >
@@ -4643,9 +5035,9 @@ export default function AllDocTable() {
                   fontSize={20}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    handleCloseModal("shareAssignRoleModel")
-                    setShareDocumentData(null)
-                    setRoles([])
+                    handleCloseModal("shareAssignRoleModel");
+                    setShareDocumentData(null);
+                    setRoles([]);
                     setSelectedRoleIds([]);
                   }}
                 />
@@ -4653,20 +5045,18 @@ export default function AllDocTable() {
             </div>
           </Modal.Header>
           <Modal.Body className="py-3 ">
-            <div
-              className="d-flex flex-column custom-scroll mb-3"
-            >
-
+            <div className="d-flex flex-column custom-scroll mb-3">
               <div className="col-12 col-lg-6 d-flex flex-column">
-                <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                <p
+                  className="mb-1 text-start w-100"
+                  style={{ fontSize: "14px" }}
+                >
                   Roles
                 </p>
                 <div className="d-flex flex-column position-relative">
                   <DropdownButton
                     id="dropdown-category-button"
-                    title={
-                      roles.length > 0 ? roles.join(", ") : "Select Roles"
-                    }
+                    title={roles.length > 0 ? roles.join(", ") : "Select Roles"}
                     className="custom-dropdown-text-start text-start w-100"
                     onSelect={(value) => {
                       if (value) handleRoleSelect(value);
@@ -4679,9 +5069,7 @@ export default function AllDocTable() {
                         </Dropdown.Item>
                       ))
                     ) : (
-                      <Dropdown.Item disabled>
-                        No Roles available
-                      </Dropdown.Item>
+                      <Dropdown.Item disabled>No Roles available</Dropdown.Item>
                     )}
                   </DropdownButton>
 
@@ -4712,10 +5100,10 @@ export default function AllDocTable() {
                           ...(prev || {
                             type: "",
                             assigned_roles_or_users: "",
-                            is_time_limited: '',
+                            is_time_limited: "",
                             end_date_time: "",
                             start_date_time: "",
-                            is_downloadable: ""
+                            is_downloadable: "",
                           }),
                           is_time_limited: e.target.checked ? "1" : "0",
                         }))
@@ -4732,46 +5120,54 @@ export default function AllDocTable() {
                   </label>
                 </div>
                 <div className="d-flex flex-column">
-                  {
-                    shareDocumentData?.is_time_limited && (
-                      <div className="d-flex flex-column flex-md-row">
-                        <div className="col-12 col-lg-6 d-flex flex-column pe-lg-1">
-                          <label className="d-flex flex-column w-100">
-                            <p
-                              className="mb-1 text-start w-100"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Reminder Start Date
-                            </p>
-                          </label>
-                          <DatePicker
-                            showTime
-                            onChange={(value, dateString) => {
-                              setSelectedStartDateTime(dateString.toString());
-                            }}
-                            onOk={(value) => onStartDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
-                          />
-                        </div>
-                        <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
-                          <label className="d-flex flex-column w-100">
-                            <p
-                              className="mb-1 text-start w-100"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Reminder End Date
-                            </p>
-                          </label>
-                          <DatePicker
-                            showTime
-                            onChange={(value, dateString) => {
-                              setSelectedEndDateTime(dateString.toString())
-                            }}
-                            onOk={(value) => onEndDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
-                          />
-                        </div>
+                  {shareDocumentData?.is_time_limited && (
+                    <div className="d-flex flex-column flex-md-row">
+                      <div className="col-12 col-lg-6 d-flex flex-column pe-lg-1">
+                        <label className="d-flex flex-column w-100">
+                          <p
+                            className="mb-1 text-start w-100"
+                            style={{ fontSize: "14px" }}
+                          >
+                            Reminder Start Date
+                          </p>
+                        </label>
+                        <DatePicker
+                          showTime
+                          onChange={(value, dateString) => {
+                            setSelectedStartDateTime(dateString.toString());
+                          }}
+                          onOk={(value) =>
+                            onStartDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
+                        />
                       </div>
-                    )
-                  }
+                      <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
+                        <label className="d-flex flex-column w-100">
+                          <p
+                            className="mb-1 text-start w-100"
+                            style={{ fontSize: "14px" }}
+                          >
+                            Reminder End Date
+                          </p>
+                        </label>
+                        <DatePicker
+                          showTime
+                          onChange={(value, dateString) => {
+                            setSelectedEndDateTime(dateString.toString());
+                          }}
+                          onOk={(value) =>
+                            onEndDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-12">
@@ -4783,10 +5179,10 @@ export default function AllDocTable() {
                         ...(prev || {
                           type: "",
                           assigned_roles_or_users: "",
-                          is_time_limited: '',
+                          is_time_limited: "",
                           end_date_time: "",
                           start_date_time: "",
-                          is_downloadable: ""
+                          is_downloadable: "",
                         }),
                         is_downloadable: e.target.checked ? "1" : "0",
                       }))
@@ -4807,16 +5203,18 @@ export default function AllDocTable() {
           <Modal.Footer>
             <div className="d-flex flex-row">
               <button
-                onClick={() => handleShareRoleDocument(selectedDocumentId!, userId!)}
+                onClick={() =>
+                  handleShareRoleDocument(selectedDocumentId!, userId!)
+                }
                 className="custom-icon-button button-success px-3 py-1 rounded me-2"
               >
                 <IoSaveOutline fontSize={16} className="me-1" /> Save
               </button>
               <button
                 onClick={() => {
-                  handleCloseModal("shareAssignRoleModel")
-                  setShareDocumentData(null)
-                  setRoles([])
+                  handleCloseModal("shareAssignRoleModel");
+                  setShareDocumentData(null);
+                  setRoles([]);
                   setSelectedRoleIds([]);
                 }}
                 className="custom-icon-button button-danger px-3 py-1 rounded me-2"
@@ -4878,10 +5276,10 @@ export default function AllDocTable() {
           className="large-model"
           onHide={() => {
             handleCloseModal("allDocShareModel");
-            setRoles([])
+            setRoles([]);
             setSelectedRoleIds([]);
-            setSelectedItems([])
-            setSelectedItemsNames([])
+            setSelectedItems([]);
+            setSelectedItemsNames([]);
           }}
         >
           <Modal.Header>
@@ -4896,33 +5294,37 @@ export default function AllDocTable() {
                   fontSize={20}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    handleCloseModal("allDocShareModel")
-                    setShareDocumentData(null)
-                    setRoles([])
+                    handleCloseModal("allDocShareModel");
+                    setShareDocumentData(null);
+                    setRoles([]);
                     setSelectedRoleIds([]);
-                    setSelectedItems([])
-                    setSelectedItemsNames([])
+                    setSelectedItems([]);
+                    setSelectedItemsNames([]);
                   }}
                 />
               </div>
             </div>
           </Modal.Header>
           <Modal.Body className="py-3 ">
-            <div
-              className="d-flex flex-column custom-scroll mb-3"
-            >
-
+            <div className="d-flex flex-column custom-scroll mb-3">
               <div className="d-flex flex-wrap">
-                {
-                  selectedItemsNames.map((item, index) => (
-                    <span key={index} className="px-3 py-2 me-2 mb-2 rounded-pill" style={{ backgroundColor: "#eee" }}>{item}</span>
-                  ))
-                }
+                {selectedItemsNames.map((item, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-2 me-2 mb-2 rounded-pill"
+                    style={{ backgroundColor: "#eee" }}
+                  >
+                    {item}
+                  </span>
+                ))}
               </div>
 
               <div className="d-flex flex-column flex-lg-row mb-3">
                 <div className="col-12 col-lg-6 d-flex flex-column pe-1">
-                  <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                  <p
+                    className="mb-1 text-start w-100"
+                    style={{ fontSize: "14px" }}
+                  >
                     Users
                   </p>
                   <div className=" d-flex flex-column position-relative w-100">
@@ -4967,7 +5369,10 @@ export default function AllDocTable() {
                   </div>
                 </div>
                 <div className="col-12 col-lg-6 d-flex flex-column ps-1">
-                  <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                  <p
+                    className="mb-1 text-start w-100"
+                    style={{ fontSize: "14px" }}
+                  >
                     Roles
                   </p>
                   <div className="d-flex flex-column position-relative">
@@ -5022,10 +5427,10 @@ export default function AllDocTable() {
                           ...(prev || {
                             type: "",
                             assigned_roles_or_users: "",
-                            is_time_limited: '',
+                            is_time_limited: "",
                             end_date_time: "",
                             start_date_time: "",
-                            is_downloadable: ""
+                            is_downloadable: "",
                           }),
                           is_time_limited: e.target.checked ? "1" : "0",
                         }))
@@ -5042,48 +5447,56 @@ export default function AllDocTable() {
                   </label>
                 </div>
                 <div className="d-flex flex-column">
-                  {
-                    shareDocumentData?.is_time_limited && (
-                      <div className="d-flex flex-column flex-md-row">
-                        <div className="col-12 col-lg-6 d-flex flex-column pe-lg-1">
-                          <label className="d-flex flex-column w-100">
-                            <p
-                              className="mb-1 text-start w-100"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Reminder Start Date
-                            </p>
-                          </label>
-                          <DatePicker
-                            showTime
-                            className="p-1"
-                            onChange={(value, dateString) => {
-                              setSelectedStartDateTime(dateString.toString())
-                            }}
-                            onOk={(value) => onStartDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
-                          />
-                        </div>
-                        <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
-                          <label className="d-flex flex-column w-100">
-                            <p
-                              className="mb-1 text-start w-100"
-                              style={{ fontSize: "14px" }}
-                            >
-                              Reminder End Date
-                            </p>
-                          </label>
-                          <DatePicker
-                            showTime
-                            className="p-1"
-                            onChange={(value, dateString) => {
-                              setSelectedEndDateTime(dateString.toString())
-                            }}
-                            onOk={(value) => onEndDateTimeOk(value, value?.format('YYYY-MM-DD HH:mm:ss') ?? '')}
-                          />
-                        </div>
+                  {shareDocumentData?.is_time_limited && (
+                    <div className="d-flex flex-column flex-md-row">
+                      <div className="col-12 col-lg-6 d-flex flex-column pe-lg-1">
+                        <label className="d-flex flex-column w-100">
+                          <p
+                            className="mb-1 text-start w-100"
+                            style={{ fontSize: "14px" }}
+                          >
+                            Reminder Start Date
+                          </p>
+                        </label>
+                        <DatePicker
+                          showTime
+                          className="p-1"
+                          onChange={(value, dateString) => {
+                            setSelectedStartDateTime(dateString.toString());
+                          }}
+                          onOk={(value) =>
+                            onStartDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
+                        />
                       </div>
-                    )
-                  }
+                      <div className="col-12 col-lg-6 d-flex flex-column  ps-lg-1">
+                        <label className="d-flex flex-column w-100">
+                          <p
+                            className="mb-1 text-start w-100"
+                            style={{ fontSize: "14px" }}
+                          >
+                            Reminder End Date
+                          </p>
+                        </label>
+                        <DatePicker
+                          showTime
+                          className="p-1"
+                          onChange={(value, dateString) => {
+                            setSelectedEndDateTime(dateString.toString());
+                          }}
+                          onOk={(value) =>
+                            onEndDateTimeOk(
+                              value,
+                              value?.format("YYYY-MM-DD HH:mm:ss") ?? ""
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-12">
@@ -5095,10 +5508,10 @@ export default function AllDocTable() {
                         ...(prev || {
                           type: "",
                           assigned_roles_or_users: "",
-                          is_time_limited: '',
+                          is_time_limited: "",
                           end_date_time: "",
                           start_date_time: "",
-                          is_downloadable: ""
+                          is_downloadable: "",
                         }),
                         is_downloadable: e.target.checked ? "1" : "0",
                       }))
@@ -5126,12 +5539,12 @@ export default function AllDocTable() {
               </button>
               <button
                 onClick={() => {
-                  handleCloseModal("allDocShareModel")
-                  setShareDocumentData(null)
-                  setRoles([])
+                  handleCloseModal("allDocShareModel");
+                  setShareDocumentData(null);
+                  setRoles([]);
                   setSelectedRoleIds([]);
-                  setSelectedItems([])
-                  setSelectedItemsNames([])
+                  setSelectedItems([]);
+                  setSelectedItemsNames([]);
                 }}
                 className="custom-icon-button button-danger px-3 py-1 rounded me-2"
               >
@@ -5162,7 +5575,10 @@ export default function AllDocTable() {
                 <IoClose
                   fontSize={20}
                   style={{ cursor: "pointer" }}
-                  onClick={() => { handleCloseModal("viewModel"); setMetaTags([]) }}
+                  onClick={() => {
+                    handleCloseModal("viewModel");
+                    setMetaTags([]);
+                  }}
                 />
               </div>
             </div>
@@ -5170,25 +5586,45 @@ export default function AllDocTable() {
           <Modal.Body className="p-2 p-lg-4">
             <div className="d-flex preview-container">
               {viewDocument && (
-
                 <>
-                  {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
+                  {[
+                    "jpg",
+                    "jpeg",
+                    "png",
+                    "gif",
+                    "bmp",
+                    "webp",
+                    "svg",
+                    "tiff",
+                    "ico",
+                    "avif",
+                  ].includes(viewDocument.type) ? (
                     <Image
                       src={viewDocument.url}
                       alt={viewDocument.name}
                       width={600}
                       height={600}
                     />
-                  ) : viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1 ? (
-                    <div className="iframe-container" data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}>
+                  ) : viewDocument.type === "pdf" ||
+                    viewDocument.enable_external_file_view === 1 ? (
+                    <div
+                      className="iframe-container"
+                      data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}
+                    >
                       <iframe
                         src={
                           viewDocument.type === "pdf"
                             ? viewDocument.url
-                            : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`
+                            : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                                viewDocument.url
+                              )}`
                         }
                         title="Document Preview"
-                        style={{ width: "100%", height: "500px", border: "none" }}
+                        style={{
+                          width: "100%",
+                          height: "500px",
+                          border: "none",
+                        }}
                       ></iframe>
                     </div>
                   ) : (
@@ -5198,16 +5634,23 @@ export default function AllDocTable() {
               )}
             </div>
 
-
-
             <p className="mb-1" style={{ fontSize: "14px" }}>
-              Document Name : <span style={{ fontWeight: 600 }} >{viewDocument?.name || ""}</span>
+              Document Name :{" "}
+              <span style={{ fontWeight: 600 }}>
+                {viewDocument?.name || ""}
+              </span>
             </p>
             <p className="mb-1" style={{ fontSize: "14px" }}>
-              Category : <span style={{ fontWeight: 600 }} >{viewDocument?.category.category_name}</span>
+              Category :{" "}
+              <span style={{ fontWeight: 600 }}>
+                {viewDocument?.category.category_name}
+              </span>
             </p>
             <p className="mb-1 " style={{ fontSize: "14px" }}>
-              Description : <span style={{ fontWeight: 600 }} >{viewDocument?.description || ""}</span>
+              Description :{" "}
+              <span style={{ fontWeight: 600 }}>
+                {viewDocument?.description || ""}
+              </span>
             </p>
             <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
               Meta tags:{" "}
@@ -5229,12 +5672,16 @@ export default function AllDocTable() {
               <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
                 Attributes:
                 {attributes.map((attr, index) => (
-                  <div key={index} style={{
-                    fontWeight: 600,
-                    textTransform: 'capitalize'
-                  }}
-                    className="me-2 px-3 rounded py-1">
-                    <span style={{ fontWeight: 600 }}>{attr.attribute}:</span> {attr.value}
+                  <div
+                    key={index}
+                    style={{
+                      fontWeight: 600,
+                      textTransform: "capitalize",
+                    }}
+                    className="me-2 px-3 rounded py-1"
+                  >
+                    <span style={{ fontWeight: 600 }}>{attr.attribute}:</span>{" "}
+                    {attr.value}
                   </div>
                 ))}
               </p>
@@ -5244,7 +5691,11 @@ export default function AllDocTable() {
               {hasPermission(permissions, "All Documents", "Edit Document") && (
                 <button
                   onClick={() =>
-                    handleOpenModal("editModel", viewDocument?.id, viewDocument?.name)
+                    handleOpenModal(
+                      "editModel",
+                      viewDocument?.id,
+                      viewDocument?.name
+                    )
                   }
                   className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
                 >
@@ -5252,78 +5703,116 @@ export default function AllDocTable() {
                   Edit
                 </button>
               )}
-              {hasPermission(permissions, "All Documents", "Share Document") && (
-                <button onClick={() =>
-                  handleOpenModal(
-                    "shareDocumentModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                } className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1">
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Share Document"
+              ) && (
+                <button
+                  onClick={() =>
+                    handleOpenModal(
+                      "shareDocumentModel",
+                      viewDocument?.id,
+                      viewDocument?.name
+                    )
+                  }
+                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                >
                   <IoShareSocial className="me-2" />
                   Share
                 </button>
               )}
-              {hasPermission(permissions, "All Documents", "Manage Sharable Link") && (
-                <button onClick={() =>
-                  handleGetShareableLinkModel(viewDocument?.id || 0)
-                }
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1">
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Manage Sharable Link"
+              ) && (
+                <button
+                  onClick={() =>
+                    handleGetShareableLinkModel(viewDocument?.id || 0)
+                  }
+                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                >
                   <IoShareSocial className="me-2" />
                   Get Shareable Link
                 </button>
               )}
-              {hasPermission(permissions, "All Documents", "Download Document") && viewDocument?.id && (
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Download Document"
+              ) &&
+                viewDocument?.id && (
+                  <button
+                    onClick={() =>
+                      handleDownload(viewDocument?.id || 0, userId)
+                    }
+                    className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                  >
+                    <MdFileDownload className="me-2" />
+                    Download
+                  </button>
+                )}
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Upload New Version file"
+              ) && (
                 <button
-                  onClick={() => handleDownload(viewDocument?.id || 0, userId)}
-                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1">
-                  <MdFileDownload className="me-2" />
-                  Download
+                  onClick={() =>
+                    handleOpenModal(
+                      "uploadNewVersionFileModel",
+                      viewDocument?.id,
+                      viewDocument?.name
+                    )
+                  }
+                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                >
+                  <MdUpload className="me-2" />
+                  Upload New Version file
                 </button>
               )}
-
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "uploadNewVersionFileModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <MdUpload className="me-2" />
-                Upload New Version file
-              </button>
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "versionHistoryModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <GoHistory className="me-2" />
-                Version History
-              </button>
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "commentModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <BiSolidCommentDetail className="me-2" />
-                Comment
-              </button>
-
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Version History"
+              ) && (
+                <button
+                  onClick={() =>
+                    handleOpenModal(
+                      "versionHistoryModel",
+                      viewDocument?.id,
+                      viewDocument?.name
+                    )
+                  }
+                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                >
+                  <GoHistory className="me-2" />
+                  Version History
+                </button>
+              )}
+              {hasPermission(permissions, "All Documents", "Comment") && (
+                <button
+                  onClick={() =>
+                    handleOpenModal(
+                      "commentModel",
+                      viewDocument?.id,
+                      viewDocument?.name
+                    )
+                  }
+                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                >
+                  <BiSolidCommentDetail className="me-2" />
+                  Comment
+                </button>
+              )}
               {hasPermission(permissions, "All Documents", "Add Reminder") && (
                 <button
                   onClick={() =>
                     handleOpenModal(
                       "addReminderModel",
-                      viewDocument?.id, viewDocument?.name
+                      viewDocument?.id,
+                      viewDocument?.name
                     )
                   }
                   className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
@@ -5337,7 +5826,8 @@ export default function AllDocTable() {
                   onClick={() =>
                     handleOpenModal(
                       "sendEmailModel",
-                      viewDocument?.id, viewDocument?.name
+                      viewDocument?.id,
+                      viewDocument?.name
                     )
                   }
                   className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
@@ -5346,25 +5836,36 @@ export default function AllDocTable() {
                   Send Email
                 </button>
               )}
-              <button
-                onClick={() =>
-                  handleOpenModal(
-                    "removeIndexingModel",
-                    viewDocument?.id, viewDocument?.name
-                  )
-                }
-                className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
-              >
-                <AiOutlineZoomOut className="me-2" />
-                Remove From Search
-              </button>
-
-              {hasPermission(permissions, "All Documents", "Archive Document") && (
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Remove From Search"
+              ) && (
+                <button
+                  onClick={() =>
+                    handleOpenModal(
+                      "removeIndexingModel",
+                      viewDocument?.id,
+                      viewDocument?.name
+                    )
+                  }
+                  className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
+                >
+                  <AiOutlineZoomOut className="me-2" />
+                  Remove From Search
+                </button>
+              )}
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Archive Document"
+              ) && (
                 <button
                   onClick={() =>
                     handleOpenModal(
                       "docArchivedModel",
-                      viewDocument?.id, viewDocument?.name
+                      viewDocument?.id,
+                      viewDocument?.name
                     )
                   }
                   className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
@@ -5373,12 +5874,17 @@ export default function AllDocTable() {
                   Archive
                 </button>
               )}
-              {hasPermission(permissions, "All Documents", "Delete Document") && (
+              {hasPermission(
+                permissions,
+                "All Documents",
+                "Delete Document"
+              ) && (
                 <button
                   onClick={() =>
                     handleOpenModal(
                       "deleteFileModel",
-                      viewDocument?.id, viewDocument?.name
+                      viewDocument?.id,
+                      viewDocument?.name
                     )
                   }
                   className="addButton me-2 bg-white text-dark border border-success rounded px-3 py-1"
@@ -5387,9 +5893,7 @@ export default function AllDocTable() {
                   Delete
                 </button>
               )}
-
             </div>
-
           </Modal.Body>
 
           <Modal.Footer>
@@ -5404,7 +5908,7 @@ export default function AllDocTable() {
                 onClick={() => {
                   handleCloseModal("viewModel");
                   setSelectedDocumentId(null);
-                  setMetaTags([])
+                  setMetaTags([]);
                 }}
                 className="custom-icon-button button-danger text-white bg-danger px-3 py-1 rounded"
               >
@@ -5414,7 +5918,6 @@ export default function AllDocTable() {
           </Modal.Footer>
         </Modal>
 
-
         {/* delete all doc model */}
         <Modal
           centered
@@ -5422,10 +5925,10 @@ export default function AllDocTable() {
           className="large-model"
           onHide={() => {
             handleCloseModal("deleteBulkFileModel");
-            setRoles([])
+            setRoles([]);
             setSelectedRoleIds([]);
-            setSelectedItems([])
-            setSelectedItemsNames([])
+            setSelectedItems([]);
+            setSelectedItemsNames([]);
           }}
         >
           <Modal.Header>
@@ -5440,18 +5943,16 @@ export default function AllDocTable() {
                   fontSize={20}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    handleCloseModal("deleteBulkFileModel")
-                    setSelectedItems([])
-                    setSelectedItemsNames([])
+                    handleCloseModal("deleteBulkFileModel");
+                    setSelectedItems([]);
+                    setSelectedItemsNames([]);
                   }}
                 />
               </div>
             </div>
           </Modal.Header>
           <Modal.Body className="py-3 ">
-            <div
-              className="d-flex flex-column custom-scroll mb-3"
-            >
+            <div className="d-flex flex-column custom-scroll mb-3">
               <p
                 className="mb-3 text-danger"
                 style={{ fontSize: "18px", color: "#333" }}
@@ -5459,13 +5960,16 @@ export default function AllDocTable() {
                 Are you sure you want to delete?
               </p>
               <div className="d-flex flex-wrap">
-                {
-                  selectedItemsNames.map((item, index) => (
-                    <span key={index} className="px-3 py-2 me-2 mb-2 rounded-pill" style={{ backgroundColor: "#eee" }}>{item}</span>
-                  ))
-                }
+                {selectedItemsNames.map((item, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-2 me-2 mb-2 rounded-pill"
+                    style={{ backgroundColor: "#eee" }}
+                  >
+                    {item}
+                  </span>
+                ))}
               </div>
-
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -5478,9 +5982,9 @@ export default function AllDocTable() {
               </button>
               <button
                 onClick={() => {
-                  handleCloseModal("deleteBulkFileModel")
-                  setSelectedItems([])
-                  setSelectedItemsNames([])
+                  handleCloseModal("deleteBulkFileModel");
+                  setSelectedItems([]);
+                  setSelectedItemsNames([]);
                 }}
                 className="custom-icon-button button-danger px-3 py-1 rounded me-2"
               >
