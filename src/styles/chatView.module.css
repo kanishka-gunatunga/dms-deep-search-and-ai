@@ -80,3 +80,14 @@
 .formatStyles ul{
     list-style:decimal-leading-zero;
 }
+
+
+@media screen and (width: 1280px) and (height: 720px) {
+    .chat_window {
+        min-height: 50vh;
+    }
+    .chat_body {
+        height: 450px;
+    }
+  }
+  
