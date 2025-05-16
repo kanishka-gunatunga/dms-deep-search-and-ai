@@ -41,3 +41,8 @@ export default function BotMessage({ text }: { text: string }) {
         </div>
     );
 }
+
+
+
+
+

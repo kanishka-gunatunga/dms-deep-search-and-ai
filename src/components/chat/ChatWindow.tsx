@@ -145,7 +145,12 @@ export default function ChatWindow() {
         });
         const res = await postWithAuth("covert-document-tone", formData);
         console.log("data qa msg: ", res)
-        updateMessages([...newMessages, { type: 'bot', text: res.response }]);
+        if(res.status === "success"){
+          updateMessages([...newMessages, { type: 'bot', text: res.response }]);
+        }else{
+          updateMessages([...newMessages, { type: 'bot', text: "Sorry, something went wrong. Please try again.." }]);
+        }
+        
       } catch (err) {
         console.error('error in changing tone::', err);
         updateMessages([...newMessages, { type: 'bot', text: 'Sorry, something went wrong.' }]);
