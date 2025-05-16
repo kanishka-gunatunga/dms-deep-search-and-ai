@@ -83,7 +83,7 @@ export default function ChatWindow() {
         console.log(`${key}:`, value);
       });
       const res = await postWithAuth("generate-document-content", formData);
-      console.log("data qa msg: ", res)
+      console.log("generate-document-content: ", res)
       updateMessages([...newMessages, { type: 'bot', text: res.response }]);
       setLoading(false);
     } else if (action === 'summarize') {
