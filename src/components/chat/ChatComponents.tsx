@@ -182,6 +182,6 @@ export const ChatActionSelector: FC<ChatActionSelectorProps> = ({ action, onChan
         <Select.Option value="generate">Generate</Select.Option>
         <Select.Option value="qa">Q&A</Select.Option>
         <Select.Option value="tone">Tone</Select.Option>
-        <Select.Option value="translate">Translate</Select.Option>
+        {/* <Select.Option value="translate">Translate</Select.Option> */}
     </Select>
 );

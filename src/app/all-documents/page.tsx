@@ -2262,7 +2262,7 @@ export default function AllDocTable() {
                                       >
                                         Sentiment Analysis
                                       </Dropdown.Item>
-                                      <Dropdown.Item
+                                      {/* <Dropdown.Item
                                         onClick={() =>
                                           toggleChat({
                                             documentId: item.id.toString(),
@@ -2272,7 +2272,7 @@ export default function AllDocTable() {
                                         }
                                       >
                                         Translate Document
-                                      </Dropdown.Item>
+                                      </Dropdown.Item> */}
                                     </div>
                                   )}
                                 </Dropdown.Item>
