@@ -24,6 +24,7 @@ export interface Category {
 
 export interface TableItem {
   id: string;
+  role: string;
   email: string;
   firstName: string;
   lastName: string;

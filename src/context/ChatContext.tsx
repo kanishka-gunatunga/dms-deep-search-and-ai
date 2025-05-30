@@ -1,6 +1,6 @@
 'use client';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { deleteWithAuth, getWithAuth } from '@/utils/apiClient';
+import {  getWithAuth } from '@/utils/apiClient';
 
 export type ChatAction = 'summarize' | 'generate' | 'qa' | 'tone' | 'translate';
 
@@ -33,13 +33,13 @@ const uploadDocumentVectors = async (documentId: string) => {
 
 const deleteDocumentVectors = async (chatId: string, action?: string) => {
   if (action === "qa") {
-    const res = await deleteWithAuth(`delete-vectors/${chatId}`);
+    const res = await getWithAuth(`delete-vectors/${chatId}`);
     console.log("data delete qa: ", res);
     return res;
   } else {
-    const res = await deleteWithAuth(`delete-nonqa/${chatId}`);
-    console.log("data delete non-qa: ", res);
-    return res;
+    // const res = await deleteWithAuth(`delete-nonqa/${chatId}`);
+    console.log("data delete non-qa: ");
+    // return res;
   }
 };
 

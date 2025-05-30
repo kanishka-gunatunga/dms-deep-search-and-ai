@@ -83,7 +83,7 @@ export default function ChatWindow() {
         console.log(`${key}:`, value);
       });
       const res = await postWithAuth("generate-document-content", formData);
-      console.log("data qa msg: ", res)
+      console.log("generate-document-content: ", res)
       updateMessages([...newMessages, { type: 'bot', text: res.response }]);
       setLoading(false);
     } else if (action === 'summarize') {
@@ -145,7 +145,12 @@ export default function ChatWindow() {
         });
         const res = await postWithAuth("covert-document-tone", formData);
         console.log("data qa msg: ", res)
-        updateMessages([...newMessages, { type: 'bot', text: res.response }]);
+        if(res.status === "success"){
+          updateMessages([...newMessages, { type: 'bot', text: res.response }]);
+        }else{
+          updateMessages([...newMessages, { type: 'bot', text: "Sorry, something went wrong. Please try again.." }]);
+        }
+        
       } catch (err) {
         console.error('error in changing tone::', err);
         updateMessages([...newMessages, { type: 'bot', text: 'Sorry, something went wrong.' }]);

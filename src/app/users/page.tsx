@@ -96,6 +96,7 @@ export default function AllDocTable() {
   useEffect(() => {
     fetchAndMapUserTableData(setTableData);
   }, []);
+  console.log("fetchAndMapUserTableData ", tableData)
 
   if (!isAuthenticated) {
     return <LoadingSpinner />;
@@ -275,7 +276,7 @@ export default function AllDocTable() {
                                 </Dropdown.Item>
                               )}
                               {hasPermission(permissions, "User", "Assign Permission") && (
-                                <Dropdown.Item href={`/users/permissions/${item.id}`} className="py-2">
+                                <Dropdown.Item href={`/users/permissions/${item.role}`} className="py-2">
                                   <MdPeople className="me-2" />
                                   Permission
                                 </Dropdown.Item>

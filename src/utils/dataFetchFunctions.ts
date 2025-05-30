@@ -95,25 +95,61 @@ export const fetchAndMapUserData = async (
   }
 };
 
+// export const fetchAndMapUserTableData = async (
+//   setTableData: React.Dispatch<React.SetStateAction<TableItem[]>>
+// ) => {
+//   try {
+//     const response = await getWithAuth("users");
+//     console.log("response users: ", response)
+//     const mappedData: TableItem[] = response.map((item: any) => ({
+//       id: item?.id,
+//       email: item?.email,
+//       role: item?.role,
+//       firstName: item?.user_details?.first_name,
+//       lastName: item?.user_details?.last_name,
+//       mobileNumber: item?.user_details?.mobile_no.toString(),
+//     }));
+
+//     setTableData(mappedData);
+//   } catch (error) {
+//     console.error("Failed to fetch user data:", error);
+//   }
+// };
+
 export const fetchAndMapUserTableData = async (
   setTableData: React.Dispatch<React.SetStateAction<TableItem[]>>
 ) => {
   try {
     const response = await getWithAuth("users");
-    // console.log("response users: ", response)
-    const mappedData: TableItem[] = response.map((item: any) => ({
-      id: item?.id,
-      email: item?.email,
-      firstName: item?.user_details?.first_name,
-      lastName: item?.user_details?.last_name,
-      mobileNumber: item?.user_details?.mobile_no.toString(),
-    }));
+    console.log("response users: ", response);
+
+    const mappedData: TableItem[] = response.map((item: any) => {
+      let role = "";
+      try {
+        const parsedRole = JSON.parse(item?.role);
+        if (Array.isArray(parsedRole) && parsedRole.length > 0) {
+          role = parsedRole[0];
+        }
+      } catch (e) {
+        console.error("Error parsing role:", e);
+      }
+
+      return {
+        id: item?.id,
+        email: item?.email,
+        role,
+        firstName: item?.user_details?.first_name,
+        lastName: item?.user_details?.last_name,
+        mobileNumber: item?.user_details?.mobile_no?.toString() || "",
+      };
+    });
 
     setTableData(mappedData);
   } catch (error) {
     console.error("Failed to fetch user data:", error);
   }
 };
+
 
 export const fetchAndMapRoleUserData = async (
   setTableData: React.Dispatch<React.SetStateAction<RoleUserItem[]>>

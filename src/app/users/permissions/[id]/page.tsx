@@ -35,7 +35,10 @@ export default function AllDocTable({ params }: Props) {
 
     const fetchRoleData = async (id: string) => {
         try {
+            console.log(id , "user id")
             const response = await getWithAuth(`role-details/${id}`);
+
+            console.log("get role details: ",response)
 
             if (response.status === "fail") {
             } else {
@@ -43,6 +46,8 @@ export default function AllDocTable({ params }: Props) {
                 console.log(roleData)
                 setRoleName(roleData.role_name);
                 setRoleName(response.role_name);
+
+                console.log("role name: ",response.role_name)
                 const parsedPermissions = JSON.parse(roleData.permissions || "[]");
 
                 const initialSelectedGroups: { [key: string]: string[] } = {};
@@ -83,9 +88,10 @@ export default function AllDocTable({ params }: Props) {
 
     const allGroups = [
         { name: "Dashboard", items: ["View Dashboard"] },
-        { name: "All Documents", items: ["View Documents", "Create Document", "Edit Document", "Delete Document", "Archive Document", "Add Reminder", "Share Document", "Download Document", "Send Email", "Manage Sharable Link"] },
-        { name: "Assigned Documents", items: ["Create Document", "Edit Document", "Share Document", "Upload New Version", "Delete Document", "Send Email", "Manage Sharable Link"] },
+        { name: "All Documents", items: ["View Documents", "Create Document", "Edit Document", "Delete Document", "Archive Document", "Add Reminder", "Share Document", "Download Document", "Send Email", "Manage Sharable Link", "AI Options", "Upload New Version file", "Version History", "Comment", "Remove From Search"] },        { name: "Assigned Documents", items: ["Create Document", "Edit Document", "Share Document", "Upload New Version", "Delete Document", "Send Email", "Manage Sharable Link"] },
         { name: "Archived Documents", items: ["View Documents", "Restore Document", "Delete Document"] },
+        { name: "Assigned Documents", items: ["Create Document", "Edit Document", "Share Document", "Upload New Version", "Delete Document", "Send Email", "Manage Sharable Link", "Upload New Version file", "Version History", "Comment", "Remove From Search", "Download", "Add Reminder", "Archive"] },
+        { name: "Advanced Search", items: ["Advanced Search"] },
         { name: "Deep Search", items: ["Deep Search", "Add Indexing", "Remove Indexing"] },
         { name: "Document Categories", items: ["Manage Document Category"] },
         { name: "Bulk Upload", items: ["View Bulk Upload", "Delete Bulk Upload", "Create Bulk Upload", "Edit Bulk Upload",] },
@@ -165,9 +171,11 @@ export default function AllDocTable({ params }: Props) {
             formData.append("role_name", roleName);
             formData.append("permissions", JSON.stringify(selectedArray));
 
+            console.log("permission: " , roleName ,  JSON.stringify(selectedArray))
+
             const response = await postWithAuth(`role-details/${id}`, formData);
 
-
+console.log("permission res: ",response)
 
 
             if (response.status === "success") {
