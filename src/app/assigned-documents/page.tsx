@@ -648,7 +648,11 @@ export default function AllDocTable() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
 
-  const paginatedData = dummyData.slice(startIndex, endIndex);
+  // const paginatedData = dummyData.slice(startIndex, endIndex);
+  const paginatedData = Array.isArray(dummyData)
+  ? dummyData.slice(startIndex, endIndex)
+  : [];
+
 
 
   const handleFilterChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
