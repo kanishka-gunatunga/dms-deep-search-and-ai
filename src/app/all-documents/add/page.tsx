@@ -74,8 +74,8 @@ export default function AllDocTable() {
   >([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [selectedSectorId, setSelectedSectorId] = useState<string>("");
-  const [encriptionType, setEncriptionType] = useState<string>("128bit");
-  const [isEncripted, setIsEncripted] = useState<boolean>(false);
+  // const [encriptionType, setEncriptionType] = useState<string>("128bit");
+  // const [isEncripted, setIsEncripted] = useState<boolean>(false);
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<"success" | "error">("success");
   const [toastMessage, setToastMessage] = useState("");
@@ -228,7 +228,7 @@ export default function AllDocTable() {
 
   const collectedData = {
     isTimeLimited: isTimeLimited ? "1" : "0",
-    isEncripted: isEncripted ? "1" : "0",
+    // isEncripted: isEncripted ? "1" : "0",
     startDate: formatDateForSQL(startDate),
     endDate: formatDateForSQL(endDate),
     downloadable: downloadable ? "1" : "0",
@@ -317,8 +317,8 @@ export default function AllDocTable() {
     formData.append("user_end_date_time", collectedData.userEndDate || "");
     formData.append("user_is_downloadable", collectedData.userDownloadable);
     formData.append("user", userId || "");
-    formData.append("is_encrypted", collectedData.isEncripted);
-    formData.append("encryption_type", encriptionType);
+    // formData.append("is_encrypted", collectedData.isEncripted);
+    // formData.append("encryption_type", encriptionType);
     formData.append("attribute_data", JSON.stringify(formAttributeData));
     formData.append("expiration_date", collectedData.expireDate || "");
 
@@ -980,7 +980,7 @@ export default function AllDocTable() {
                   </div>
                 </div>
               </div>
-              <div className="d-flex flex-column flex-lg-row w-100">
+              {/* <div className="d-flex flex-column flex-lg-row w-100">
                 <div className="col-12 col-lg-6 d-flex flex-column justify-content-center">
                   <label className="d-flex flex-row mt-3">
                     <Checkbox
@@ -1023,7 +1023,7 @@ export default function AllDocTable() {
                     )}
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
