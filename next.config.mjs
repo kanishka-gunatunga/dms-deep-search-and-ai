@@ -19,7 +19,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)', // apply to all routes
+        source: '/(.*)', 
         headers: [
           {
           key: 'Access-Control-Allow-Origin',
@@ -34,12 +34,16 @@ const nextConfig = {
             value: 'Content-Type, Authorization',
           },
           {
+          key: 'Strict-Transport-Security',
+          value: 'max-age=31536000; includeSubDomains; preload',
+          },
+          {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; connect-src 'self' https://dms.genaitech.dev; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;",
+            value: "default-src 'self'; connect-src 'self' https://dms.genaitech.dev; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; frame-ancestors 'none';",
           },
           {
             key: 'Referrer-Policy',
