@@ -22,12 +22,23 @@ const nextConfig = {
         source: '/(.*)', // apply to all routes
         headers: [
           {
+          key: 'Access-Control-Allow-Origin',
+          value: 'https://dms-deep-search-and-ai.vercel.app', 
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization',
+          },
+          {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
           {
             key: 'Content-Security-Policy',
-            // MODIFIED LINE: Added 'connect-src'
             value: "default-src 'self'; connect-src 'self' https://dms.genaitech.dev; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;",
           },
           {
