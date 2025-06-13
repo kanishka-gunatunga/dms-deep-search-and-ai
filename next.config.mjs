@@ -27,7 +27,8 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;",
+            // MODIFIED LINE: Added 'connect-src'
+            value: "default-src 'self'; connect-src 'self' https://dms.genaitech.dev; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:;",
           },
           {
             key: 'Referrer-Policy',
