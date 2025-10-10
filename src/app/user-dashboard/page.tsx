@@ -3,7 +3,7 @@
 "use client";
 
 import DashboardLayout from "@/components/DashboardLayout";
-import styles from "./page.module.css";
+import styles from "../page.module.css";
 import Heading from "@/components/common/Heading";
 import {PieChart, Pie, Legend, ResponsiveContainer, Cell} from "recharts";
 import InfoModal from "@/components/common/InfoModel";
@@ -19,6 +19,8 @@ import {BsBriefcaseFill, BsFileEarmarkText, BsPerson} from "react-icons/bs";
 import PieChartCard from "@/components/PieChartCard";
 import RemindersCalendar from "@/components/RemindersCalendar";
 import NearlyExpiredDocuments from "@/components/NearlyExpiredDocuments";
+import MySector from "@/components/MySector";
+import AssignedFiles from "@/components/AssignedFiles";
 
 
 type Reminder = {
@@ -188,22 +190,46 @@ export default function Home() {
                     {/*</div>*/}
 
                     <div className="container-fluid py-4">
+                        {/*<div className="row g-4">*/}
+                        {/*    <div className="col-12 col-lg-6">*/}
+                        {/*        <PieChartCard*/}
+                        {/*            title="Documents by Category"*/}
+                        {/*            icon="/jam_document.svg"*/}
+                        {/*            data={categoryData}*/}
+                        {/*        />*/}
+                        {/*    </div>*/}
+
+                        {/*    <div className="col-12 col-lg-6">*/}
+                        {/*        <PieChartCard*/}
+                        {/*            title="Documents by Sector"*/}
+                        {/*            icon="/sector-line.svg"*/}
+                        {/*            data={sectorData}*/}
+                        {/*        />*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
+
                         <div className="row g-4">
-                            <div className="col-12 col-lg-6">
-                                <PieChartCard
-                                    title="Documents by Category"
-                                    icon="/jam_document.svg"
-                                    data={categoryData}
-                                />
+
+                            {/* Left Column */}
+                            <div className="col-12 col-lg-8">
+                                <AssignedFiles/>
                             </div>
 
-                            <div className="col-12 col-lg-6">
-                                <PieChartCard
-                                    title="Documents by Sector"
-                                    icon="/sector-line.svg"
-                                    data={sectorData}
-                                />
+                            {/* Right Column */}
+                            <div className="col-12 col-lg-4">
+                                <div className="d-flex flex-column gap-4">
+                                    <MySector/>
+
+                                    {/* Using your provided PieChartCard component */}
+                                    <PieChartCard
+                                        title="Documents by Category"
+                                        // You'll need to place an icon in your public folder
+                                        icon="/jam_document.svg"
+                                        data={categoryData}
+                                    />
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
