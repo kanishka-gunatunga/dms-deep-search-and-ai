@@ -11,11 +11,10 @@ import useAuth from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import {useEffect, useState} from "react";
 import {fetchRemindersData} from "@/utils/dataFetchFunctions";
-import {Badge, Calendar} from "antd";
-import type {BadgeProps, CalendarProps} from "antd";
+import {Badge} from "antd";
+import type {CalendarProps} from "antd";
 import type {Dayjs} from "dayjs";
 import StatCard from "@/components/StatCard";
-import {BsBriefcaseFill, BsFileEarmarkText, BsPerson} from "react-icons/bs";
 import PieChartCard from "@/components/PieChartCard";
 import RemindersCalendar from "@/components/RemindersCalendar";
 import NearlyExpiredDocuments from "@/components/NearlyExpiredDocuments";
@@ -55,28 +54,11 @@ export default function Home() {
         },
     ];
 
-    // const [selectedDates, setSelectedDates] = useState<{ date: string; content: string; type: BadgeProps["status"] }[]>([
-    //   { date: "2024-12-15", content: "Meeting with client", type: "success" },
-    //   { date: "2024-12-08", content: "Project deadline", type: "warning" },
-    //   { date: "2024-12-10", content: "Code review session", type: "error" },
-    // ]);
 
     const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
 
 
     useEffect(() => {
-        // const transformRemindersToDates = (reminders: any[]) => {
-        //   return reminders.map((reminder) => ({
-        //     date: reminder.start_date_time.split(" ")[0],
-        //     content: reminder.subject,
-        //     type: "success" as const,
-        //   }));
-        // };
-
-        // fetchRemindersData((data: any[]) => {
-        //   const transformedData = transformRemindersToDates(data);
-        //   setSelectedDates(transformedData);
-        // });
 
         fetchRemindersData((data) => {
             const transformedData = data
@@ -150,80 +132,30 @@ export default function Home() {
                         style={{marginTop: "12px"}}
                     >
                         <div className="d-flex flex-row align-items-center justify-content-between gap-1">
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
+                            <StatCard title="Assigned Files" value={1247} icon="/total_document.svg" changeText="+12%"
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
+                            <StatCard title="Recently Assigned" value={1247} icon="/recently_assigned.svg" changeText="+12%"
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
+                            <StatCard title="Due This Week" value={1247} icon="/due_this_week.svg" changeText="+12%"
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
-                                      changeColorClass="positiveChange"/>
+                            <StatCard title="Overdue" value={1247} icon="/warning.svg" changeText="+12%"
+                                      changeColorClass="noChange"/>
                         </div>
                     </div>
-                    {/*<div className="d-flex flex-column bg-white p-2 p-lg-3 rounded">*/}
-                    {/*  <div className="d-flex flex-row align-items-center">*/}
-                    {/*    <Heading text="Documents by Category" color="#444" />*/}
-                    {/*  </div>*/}
-                    {/*  <ResponsiveContainer width="100%" height={250}>*/}
-                    {/*    <PieChart>*/}
-                    {/*      <Pie*/}
-                    {/*        data={data01}*/}
-                    {/*        dataKey="value"*/}
-                    {/*        nameKey="name"*/}
-                    {/*        cx="50%"*/}
-                    {/*        cy="50%"*/}
-                    {/*        label*/}
-                    {/*        outerRadius={80}*/}
-                    {/*      >*/}
-                    {/*        {data01.map((entry, index) => (*/}
-                    {/*          <Cell key={`cell-${index}`} fill={entry.color} />*/}
-                    {/*        ))}*/}
-                    {/*      </Pie>*/}
-                    {/*      <Legend*/}
-                    {/*        layout="vertical"*/}
-                    {/*        align="right"*/}
-                    {/*        verticalAlign="middle"*/}
-                    {/*        height={36}*/}
-                    {/*      />*/}
-                    {/*    </PieChart>*/}
-                    {/*  </ResponsiveContainer>*/}
-                    {/*</div>*/}
 
-                    <div className="container-fluid py-4">
-                        {/*<div className="row g-4">*/}
-                        {/*    <div className="col-12 col-lg-6">*/}
-                        {/*        <PieChartCard*/}
-                        {/*            title="Documents by Category"*/}
-                        {/*            icon="/jam_document.svg"*/}
-                        {/*            data={categoryData}*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-
-                        {/*    <div className="col-12 col-lg-6">*/}
-                        {/*        <PieChartCard*/}
-                        {/*            title="Documents by Sector"*/}
-                        {/*            icon="/sector-line.svg"*/}
-                        {/*            data={sectorData}*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                    <div className="py-4">
 
                         <div className="row g-4">
 
-                            {/* Left Column */}
                             <div className="col-12 col-lg-8">
                                 <AssignedFiles/>
                             </div>
 
-                            {/* Right Column */}
                             <div className="col-12 col-lg-4">
                                 <div className="d-flex flex-column gap-4">
                                     <MySector/>
-
-                                    {/* Using your provided PieChartCard component */}
                                     <PieChartCard
                                         title="Documents by Category"
-                                        // You'll need to place an icon in your public folder
                                         icon="/jam_document.svg"
                                         data={categoryData}
                                     />
@@ -233,21 +165,6 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/*<div*/}
-                    {/*  className="d-flex flex-column bg-white p-2 p-lg-3 rounded mb-3"*/}
-                    {/*  style={{ marginTop: "12px" }}*/}
-                    {/*>*/}
-                    {/*  <div className="d-flex flex-row align-items-center">*/}
-                    {/*    <Heading text="Reminders" color="#444" />*/}
-                    {/*    /!* <InfoModal*/}
-                    {/*      title="Sample Blog"*/}
-                    {/*      content={`<h1><strong>Hello world,</strong></h1><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p>`}*/}
-                    {/*    /> *!/*/}
-                    {/*  </div>*/}
-                    {/*  /!* <Calendar onPanelChange={onPanelChange} /> *!/*/}
-                    {/*  <Calendar cellRender={cellRender} onPanelChange={onPanelChange} />*/}
-
-                    {/*</div>*/}
                     <RemindersCalendar/>
 
                     <NearlyExpiredDocuments/>

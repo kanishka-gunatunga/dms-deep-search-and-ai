@@ -1,20 +1,20 @@
 import React, {useState} from 'react';
 import {Button, Modal, Calendar, Tag} from 'antd';
-import {BsEye, BsDownload, BsArrowRepeat, BsExclamationTriangleFill} from 'react-icons/bs';
+import {BsEye, BsDownload, BsArrowRepeat} from 'react-icons/bs';
 import dayjs, {Dayjs} from 'dayjs';
+import Image from "next/image";
+
 // import styles from '../styles/Documents.module.css';
 
-// Define the type for a document
 interface Document {
     id: string;
     title: string;
     priority: 'HIGH' | 'MEDIUM' | 'LOW';
     category: string;
     sector: string;
-    expiryDate: string; // ISO format 'YYYY-MM-DD'
+    expiryDate: string;
 }
 
-// Mock data for the documents
 const initialDocuments: Document[] = [
     {
         id: 'DOC-2024-005',
@@ -58,7 +58,6 @@ const initialDocuments: Document[] = [
     },
 ];
 
-// Helper to get color based on priority
 const getPriorityTag = (priority: Document['priority']) => {
     switch (priority) {
         case 'HIGH':
@@ -82,10 +81,9 @@ const NearlyExpiredDocuments: React.FC = () => {
         return dayjs(expiryDate).diff(dayjs(), 'day');
     };
 
-    // --- Modal Handlers ---
     const handleRenewClick = (doc: Document) => {
         setSelectedDocument(doc);
-        setNewExpiryDate(dayjs(doc.expiryDate)); // Pre-fill calendar with current expiry date
+        setNewExpiryDate(dayjs(doc.expiryDate));
         setIsModalVisible(true);
     };
 
@@ -97,7 +95,6 @@ const NearlyExpiredDocuments: React.FC = () => {
     const handleConfirmRenewal = () => {
         if (!selectedDocument || !newExpiryDate) return;
 
-        // Update the document list state
         setDocuments(prevDocs =>
             prevDocs.map(doc =>
                 doc.id === selectedDocument.id
@@ -105,23 +102,22 @@ const NearlyExpiredDocuments: React.FC = () => {
                     : doc
             )
         );
-        handleModalCancel(); // Close modal after update
+        handleModalCancel();
     };
 
     return (
         <>
-            <div className="calendarWrapper" style={{marginTop: "20px"}}>
-                {/* Header */}
+            <div className="calendarWrapper" style={{marginTop: "20px", marginBottom: '90px'}}>
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div className="d-flex align-items-center gap-2">
-                        <BsExclamationTriangleFill className="text-warning"/>
-                        <h5 className="mb-0">Nearly Expired Documents</h5>
+                        <Image src="/warning.svg" alt="warning icon" width={20} height={20}/>
+                        <h5 className="mb-0" style={{color: '#0A0A0A', fontSize: '16px', fontWeight: 'normal'}}>Nearly
+                            Expired Documents</h5>
                         <Tag color="red">{documents.length} Documents</Tag>
                     </div>
                     <Button icon={<BsArrowRepeat/>}>Refresh</Button>
                 </div>
 
-                {/* Documents List */}
                 <div>
                     {documents.sort((a, b) => calculateDaysLeft(a.expiryDate) - calculateDaysLeft(b.expiryDate)).map((doc) => {
                         const daysLeft = calculateDaysLeft(doc.expiryDate);
@@ -130,7 +126,8 @@ const NearlyExpiredDocuments: React.FC = () => {
                                 <div className="row align-items-center">
                                     <div className="col-12 col-md-6 mb-3 mb-md-0">
                                         <div className="d-flex align-items-center gap-2 mb-2">
-                                            <h6 className="mb-0">{doc.title}</h6>
+                                            <h6 className="mb-0"
+                                                style={{color: '#0A0A0A', fontSize: '14px'}}>{doc.title}</h6>
                                             {getPriorityTag(doc.priority)}
                                         </div>
                                         <div className="documentMeta">
@@ -138,8 +135,10 @@ const NearlyExpiredDocuments: React.FC = () => {
                                             <span>Category: {doc.category}</span>
                                             <span>Sector: {doc.sector}</span>
                                         </div>
-                                        <small>Expired: {dayjs(doc.expiryDate).format('YYYY-MM-DD')} <span
-                                            className="daysLeft">{daysLeft} days left</span></small>
+                                        <small
+                                            className="documentMeta">Expired: {dayjs(doc.expiryDate).format('YYYY-MM-DD')}
+                                            <span
+                                                className="daysLeft">{daysLeft} days left</span></small>
                                     </div>
                                     <div
                                         className="col-12 col-md-6 d-flex justify-content-md-end align-items-center gap-2">
@@ -153,14 +152,14 @@ const NearlyExpiredDocuments: React.FC = () => {
                     })}
                 </div>
 
-                {/* Footer */}
-                <div className="d-flex justify-content-between align-items-center mt-4 text-muted">
-                    <small>Showing {documents.length} documents</small>
-                    <a href="#" className="fw-bold text-decoration-none">View All Expired Documents</a>
+                <div className="d-flex justify-content-between align-items-center mt-4 text-muted"
+                     style={{fontSize: '14px', borderTop: '1px solid rgba(0, 0, 0, 0.1)', paddingTop: '10px'}}>
+                    <small style={{color: '#717182'}}>Showing {documents.length} documents</small>
+                    <a href="#" className="text-decoration-none" style={{color: '#F54900'}}>View All Expired
+                        Documents</a>
                 </div>
             </div>
 
-            {/* Renewal Modal */}
             <Modal
                 title={`Renew: ${selectedDocument?.title}`}
                 open={isModalVisible}

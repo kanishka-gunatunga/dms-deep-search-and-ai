@@ -30,6 +30,9 @@ import {AiOutlineMenu} from "react-icons/ai";
 // import { notification } from 'antd';
 // import Link from "next/link";
 
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+
 
 // const NotificationBox = ()=>{
 //   return(
@@ -105,6 +108,27 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
     //     duration: 0,
     //   });
     // };
+
+    dayjs.extend(advancedFormat);
+
+    const useCurrentTime = () => {
+        const [currentTime, setCurrentTime] = useState(dayjs());
+
+        useEffect(() => {
+            const timerId = setInterval(() => setCurrentTime(dayjs()), 1000);
+            return () => clearInterval(timerId);
+        }, []);
+
+        const formattedDate = currentTime.format('dddd, MMMM D, YYYY');
+        const formattedTime = currentTime.format('HH:mm:ss');
+
+        return {
+            date: formattedDate,
+            time: formattedTime
+        };
+    };
+
+    const { date, time } = useCurrentTime();
 
 
     const navItems = [
@@ -257,6 +281,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
     if (loading) return <LoadingSpinner/>;
 
 
+
+
     return (
         <div
             className="d-flex flex-column bg-light"
@@ -279,18 +305,6 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
                                     className="img-fluid navLogo"
                                 />
                             </Navbar.Brand>
-                            {/*<Button*/}
-                            {/*    onClick={toggleSidebar}*/}
-                            {/*    className="me-2 d-none d-lg-block"*/}
-                            {/*    style={{*/}
-                            {/*        backgroundColor: "#fff",*/}
-                            {/*        color: "#333",*/}
-                            {/*        border: "none",*/}
-                            {/*        borderRadius: "100%",*/}
-                            {/*    }}*/}
-                            {/*>*/}
-                            {/*    ☰*/}
-                            {/*</Button>*/}
                             <div className="d-flex d-lg-none align-items-center justify-content-center">
 
                                 <Dropdown className="d-inline d-lg-none mx-2 bg-transparent" drop="down">
@@ -334,81 +348,10 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-none d-lg-flex justify-content-end align-items-center">
-                            {/* <Dropdown className="d-inline mx-2 bg-transparent">
-                <Dropdown.Toggle
-                  id="dropdown-autoclose-true"
-                  className="custom-dropdown-toggle no-caret p-0 bg-transparent"
-                  style={{
-                    backgroundColor: "#fff",
-                    color: "#333",
-                    border: "none",
-                    borderRadius: "100%",
-                  }}
-                >
-                  <Image
-                    src={"/united-states.svg"}
-                    alt=""
-                    width={25}
-                    height={25}
-                    objectFit="responsive"
-                    className="img-fluid rounded "
-                  />
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item href="#">
-                    <Image
-                      src={"/united-states.svg"}
-                      alt=""
-                      width={25}
-                      height={25}
-                      objectFit="responsive"
-                      className="img-fluid rounded"
-                    />{" "}
-                    English
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#">
-                    <Image
-                      src={"/united-states.svg"}
-                      alt=""
-                      width={25}
-                      height={25}
-                      objectFit="responsive"
-                      className="img-fluid rounded"
-                    />{" "}
-                    English
-                  </Dropdown.Item>
-                  <Dropdown.Item href="#">
-                    <Image
-                      src={"/united-states.svg"}
-                      alt=""
-                      width={25}
-                      height={25}
-                      objectFit="responsive"
-                      className="img-fluid rounded"
-                    />{" "}
-                    English
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown> */}
-                            {/* <Button
-                className="px-3 py-0"
-                style={{
-                  backgroundColor: "#fff",
-                  color: "#333",
-                  border: "none",
-                  borderRadius: "100%",
-                }}
-                onClick={openNotification}
-              >
-                <div className="position-relative">
-                  <FaRegBell />
-                  <span className="position-absolute top-0 start-100 translate-middle p-1 bg-warning rounded-circle">
-                    <span className="visually-hidden">New alerts</span>
-                  </span>
-                </div>
-              </Button> */}
-
+                            <div className="" style={{justifyItems:'end'}}>
+                                <h3 style={{color: '#6B7280', fontSize: '14px', fontWeight:400}}>Today</h3>
+                                <h3 style={{color: '#1A1A1A', fontSize: '16px', fontWeight:400}}>{date} | {time}</h3>
+                            </div>
                             <Dropdown className="d-none d-lg-inline mx-2 bg-transparent" drop="down">
                                 <Dropdown.Toggle
                                     id="dropdown-autoclose-true"
@@ -443,7 +386,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
             {/* ===================== Sidebar and main content ==================== */}
             <div
                 className="d-none d-lg-flex flex-grow-1"
-                style={{paddingTop: "67px", height: "100svh", overflow: "hidden"}}
+                style={{paddingTop: "80px", height: "100svh", overflow: "hidden"}}
             >
                 {/* sidebar */}
                 <div
@@ -467,9 +410,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
 
                         <div className="d-flex flex-column mb-5">
                             <div className="px-2 mb-3 d-flex flex-row justify-content-between">
-                            <h1 className={`${isSidebarCollapsed? "d-none": "d-block"}`} style={{fontSize: "14px", fontWeight: 500, color: "#8B4513"}}>Menu</h1>
-                                <button style={{border:"none"}} onClick={toggleSidebar}>
-                                    {isSidebarCollapsed ? <AiOutlineMenu /> : <Image src="/sidebar-arrow.svg" alt="" width={18} height={18} className="h-1 w-1"/>}
+                                <h1 className={`${isSidebarCollapsed ? "d-none" : "d-block"}`}
+                                    style={{fontSize: "14px", fontWeight: 500, color: "#8B4513"}}>Menu</h1>
+                                <button style={{border: "none"}} onClick={toggleSidebar}>
+                                    {isSidebarCollapsed ? <AiOutlineMenu/> :
+                                        <Image src="/sidebar-arrow.svg" alt="" width={18} height={18}
+                                               className="h-1 w-1"/>}
                                 </button>
                             </div>
                             {filteredNavItems.map((item, index) => (

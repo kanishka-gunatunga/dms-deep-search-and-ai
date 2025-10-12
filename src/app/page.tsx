@@ -148,14 +148,14 @@ export default function Home() {
                         style={{marginTop: "12px"}}
                     >
                         <div className="d-flex flex-row align-items-center justify-content-between gap-1">
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
+                            <StatCard title="Total Users" value={1247} icon="/total_user.svg" changeText="+12%"
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
+                            <StatCard title="Total Documents" value={1247} icon="/total_document.svg" changeText="+12%"
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
+                            <StatCard title="Categories" value={1247} icon="/categories.svg" changeText="+12%"
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Users" value={1247} icon={<BsPerson/>} changeText="+12%"
-                                      changeColorClass="positiveChange"/>
+                            <StatCard title="Sectors" value={12} icon="/sectors.svg" changeText="0"
+                                      changeColorClass="noChange"/>
                         </div>
                     </div>
                     {/*<div className="d-flex flex-column bg-white p-2 p-lg-3 rounded">*/}
@@ -187,7 +187,7 @@ export default function Home() {
                     {/*  </ResponsiveContainer>*/}
                     {/*</div>*/}
 
-                    <div className="container-fluid py-4">
+                    <div className="py-4">
                         <div className="row g-4">
                             <div className="col-12 col-lg-6">
                                 <PieChartCard

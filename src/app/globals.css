@@ -899,6 +899,8 @@ iframe #WordViewerStatusBar {
 
 
 
+/*-----------------------*/
+
 .navbarAside a span {
     color: #8B4513 !important;
     font-size: 14px !important;
@@ -936,11 +938,11 @@ iframe #WordViewerStatusBar {
 }
 
 .positiveChange {
-    color: #28a745;
+    color: #00A63E;
 }
 
 .noChange {
-    color: #6c757d;
+    color: #6A7282;
 }
 
 
@@ -959,7 +961,8 @@ iframe #WordViewerStatusBar {
     background-color: white;
     padding: 1rem 1.5rem;
     border-radius: 1.25rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);*/
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Style for each event item in a cell */
@@ -1048,13 +1051,13 @@ iframe #WordViewerStatusBar {
 }
 
 .daysLeft {
-    color: #d93026; /* Red color for urgency */
+    color: #E7000B; /* Red color for urgency */
     font-weight: 600;
 }
 
 .documentMeta {
-    font-size: 0.85rem;
-    color: #6c757d;
+    font-size: 0.75rem;
+    color: #717182;
     display: flex;
     gap: 1rem;
 }
@@ -1062,8 +1065,8 @@ iframe #WordViewerStatusBar {
 
 
 .sectorCard {
-    background-color: #FFF7F0; /* Light orange background */
-    border: 1px solid #FFE6CF;
+    background-color: #FED7AA4D; /* Light orange background */
+    /*border: 1px solid #FFE6CF;*/
 }
 
 .sectorIconWrapper {
@@ -1107,3 +1110,29 @@ iframe #WordViewerStatusBar {
     align-items: start;
     text-align: left !important;
 }
+
+.ant-picker-calendar-date-content {
+    align-content: flex-end;
+}
+
+
+:where(.css-dev-only-do-not-override-49qm).ant-picker-calendar.ant-picker-calendar-full .ant-picker-panel {
+    text-align: center !important;
+    align-content: center !important;
+}
+
+:where(.css-dev-only-do-not-override-49qm).ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-calendar-date{
+    background: #FFEDD4;
+}
+
+:where(.css-dev-only-do-not-override-49qm).ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected .ant-picker-calendar-date .ant-picker-calendar-date-value, :where(.css-dev-only-do-not-override-49qm).ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected:hover .ant-picker-calendar-date .ant-picker-calendar-date-value {
+    color: #CA3500;
+}
+
+:where(.css-dev-only-do-not-override-49qm).ant-picker-calendar .ant-picker-calendar-header {
+    margin-top: -50px;
+}
+
+/*:where(.css-dev-only-do-not-override-49qm).ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {*/
+/*    color: #CA3500;*/
+/*}*/

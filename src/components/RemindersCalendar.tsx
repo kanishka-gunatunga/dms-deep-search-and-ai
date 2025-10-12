@@ -1,21 +1,18 @@
-// components/RemindersCalendar.tsx
-
-import React, { useState } from 'react';
-import { Calendar, Modal, Badge } from 'antd';
-import type { Dayjs } from 'dayjs';
+import React, {useState} from 'react';
+import {Calendar, Modal} from 'antd';
+import type {Dayjs} from 'dayjs';
 import dayjs from 'dayjs';
-import { BsClock } from 'react-icons/bs';
+import Image from "next/image";
+
 // import styles from '../styles/RemindersCalendar.module.css';
 
-// Define the type for our event data
 interface EventData {
-    date: string; // Format: 'YYYY-MM-DD'
+    date: string;
     title: string;
     description: string;
     color: string;
 }
 
-// Sample event data
 const eventData: EventData[] = [
     {
         date: '2025-10-08',
@@ -51,7 +48,6 @@ const RemindersCalendar: React.FC = () => {
         setSelectedEvent(null);
     };
 
-    // This function renders the custom content for each date cell
     const dateCellRender = (value: Dayjs) => {
         const dateStr = value.format('YYYY-MM-DD');
         const eventsForDate = eventData.filter((event) => event.date === dateStr);
@@ -68,7 +64,7 @@ const RemindersCalendar: React.FC = () => {
                         className="eventItem"
                         onClick={() => showModal(event)}
                     >
-                        <span className="eventDot" style={{ backgroundColor: event.color }}></span>
+                        <span className="eventDot" style={{backgroundColor: event.color}}></span>
                         <span>{event.title}</span>
                     </div>
                 ))}
@@ -79,29 +75,27 @@ const RemindersCalendar: React.FC = () => {
     return (
         <>
             <div className="calendarWrapper">
-                {/* Component Header */}
                 <div className="d-flex flex-row align-items-center mb-3">
-                    <div className="text-warning fs-4 me-2">
-                        <BsClock />
+                    <div className="d-flex align-items-center gap-2">
+                        <Image src="/time.svg" alt="time icon" width={20} height={20}/>
+
+                        <h5 className="mb-0" style={{color: '#0A0A0A', fontSize: '16px'}}>
+                            Reminders
+                        </h5>
                     </div>
-                    <h5 className="mb-0 fw-bold" style={{ color: '#444' }}>
-                        Reminders
-                    </h5>
                 </div>
 
-                {/* Ant Design Calendar */}
                 <Calendar
-                    defaultValue={dayjs('2025-10-01')} // Set default view to October 2025
+                    defaultValue={dayjs('2025-10-12')}
                     cellRender={dateCellRender}
                 />
             </div>
 
-            {/* Event Details Modal */}
             <Modal
                 title={selectedEvent?.title}
                 open={isModalVisible}
                 onCancel={handleCancel}
-                footer={null} // Hide default OK/Cancel buttons
+                footer={null}
             >
                 <p>{selectedEvent?.description}</p>
                 <div className="d-flex align-items-center mt-3">

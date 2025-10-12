@@ -29,7 +29,7 @@ const PieChartCard: React.FC<PieChartCardProps> = ({ title, icon, data }) => {
                 <h5 className="mb-0" style={{ color: '#0A0A0A', fontSize: "16px", fontFamily:"Arial" }}>{title}</h5>
             </div>
 
-            <div style={{ width: '100%', height: '450px' }}>
+            <div style={{ width: '100%', height: '450px', marginTop:'-50px' }}>
                 <ResponsiveContainer>
                     <PieChart>
                         <Tooltip

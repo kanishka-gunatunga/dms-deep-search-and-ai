@@ -1,11 +1,12 @@
 import React from 'react';
 import CountUp from 'react-countup';
+import Image from "next/image";
 
-// Define the types for the component's props
+
 interface StatCardProps {
     title: string;
     value: number;
-    icon: React.ReactNode;
+    icon: string;
     changeText: string;
     changeColorClass: string;
 }
@@ -25,12 +26,12 @@ const StatCard: React.FC<StatCardProps> = ({title, value, icon, changeText, chan
                         </div>
                         <div className="iconWrapper">
                             <div className="icon">
-                                {icon}
+                                <Image src={icon} alt="icon" width={30} height={30}/>
                             </div>
                         </div>
                     </div>
 
-                    <p className={`mb-0 small`} style={{marginLeft: "2px", color: "#717182", fontSize: "14px"}}>
+                    <p className={`mb-0 mt-4 small`} style={{marginLeft: "2px", color: "#717182", fontSize: "14px"}}>
                         <span className={`${changeColorClass}`}>{changeText}</span> from last month</p>
                 </div>
             </div>
