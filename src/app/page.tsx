@@ -19,6 +19,7 @@ import {BsBriefcaseFill, BsFileEarmarkText, BsPerson} from "react-icons/bs";
 import PieChartCard from "@/components/PieChartCard";
 import RemindersCalendar from "@/components/RemindersCalendar";
 import NearlyExpiredDocuments from "@/components/NearlyExpiredDocuments";
+import {getWithAuth} from "@/utils/apiClient";
 
 
 type Reminder = {
@@ -32,6 +33,31 @@ type SelectedDate = {
     content: string;
     type: "success" | "processing" | "error" | "default" | "warning";
 };
+
+
+interface ChartDataItem {
+    name: string;
+    value: number;
+    color: string;
+}
+
+interface DashboardData {
+    total_users: number;
+    total_documents: number;
+    total_categories: number;
+    total_sectors: number;
+    documents_by_category: {
+        category_name: string;
+        percentage: number;
+    }[];
+    documents_by_sector: {
+        sector_name: string;
+        percentage: number;
+    }[];
+}
+
+
+const generateRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
 
 export default function Home() {
     const isAuthenticated = useAuth();
@@ -60,9 +86,25 @@ export default function Home() {
     // ]);
 
     const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+    const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+    const [categoryChartData, setCategoryChartData] = useState<ChartDataItem[]>([]);
+    const [sectorChartData, setSectorChartData] = useState<ChartDataItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // const fetchDashboardData = async () => {
+    //     try {
+    //         const response = await getWithAuth("admin-dashboard-data");
+    //         console.log("------------fetched data: ", response);
+    //         setFetchData(response);
+    //     } catch (error) {
+    //         console.error("Failed to fetch data:", error);
+    //     }
+    // };
+    //
+    // console.log("----------- : ", fetchData)
 
 
-    useEffect(() => {
+    // useEffect(() => {
         // const transformRemindersToDates = (reminders: any[]) => {
         //   return reminders.map((reminder) => ({
         //     date: reminder.start_date_time.split(" ")[0],
@@ -76,17 +118,91 @@ export default function Home() {
         //   setSelectedDates(transformedData);
         // });
 
-        fetchRemindersData((data) => {
-            const transformedData = data
-                .filter((reminder: { start_date_time: any; }) => reminder.start_date_time)
-                .map((reminder: { start_date_time: any; subject: any; }) => ({
-                    date: reminder.start_date_time!.split(" ")[0],
-                    content: reminder.subject,
-                    type: "success",
-                }));
-            setSelectedDates(transformedData);
-        });
-    }, []);
+        // fetchRemindersData((data) => {
+        //     const transformedData = data
+        //         .filter((reminder: { start_date_time: any; }) => reminder.start_date_time)
+        //         .map((reminder: { start_date_time: any; subject: any; }) => ({
+        //             date: reminder.start_date_time!.split(" ")[0],
+        //             content: reminder.subject,
+        //             type: "success",
+        //         }));
+        //     setSelectedDates(transformedData);
+        // });
+    //
+    //     fetchDashboardData();
+    // }, []);
+
+
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                const response: DashboardData = await getWithAuth("admin-dashboard-data");
+                setDashboardData(response);
+
+                // --- 2. Transform API data for the 'Category' pie chart ---
+                if (response.documents_by_category) {
+                    const transformedCategoryData = response.documents_by_category
+                        .filter(item => item.percentage > 0) // Only include categories with documents
+                        .map(item => ({
+                            name: item.category_name,
+                            value: Math.round(item.percentage), // Use rounded percentage
+                            color: generateRandomColor(),
+                        }));
+                    setCategoryChartData(transformedCategoryData);
+                }
+
+                // --- 3. Transform API data for the 'Sector' pie chart ---
+                if (response.documents_by_sector) {
+                    const transformedSectorData = response.documents_by_sector
+                        .filter(item => item.percentage > 0) // Only include sectors with documents
+                        .map(item => ({
+                            name: item.sector_name,
+                            value: Math.round(item.percentage),
+                            color: generateRandomColor(),
+                        }));
+                    setSectorChartData(transformedSectorData);
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch dashboard data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (isAuthenticated) {
+            fetchDashboardData();
+        }
+    }, [isAuthenticated]);
+
+
+    // useEffect(() => {
+    //     // const transformRemindersToDates = (reminders: any[]) => {
+    //     //   return reminders.map((reminder) => ({
+    //     //     date: reminder.start_date_time.split(" ")[0],
+    //     //     content: reminder.subject,
+    //     //     type: "success" as const,
+    //     //   }));
+    //     // };
+    //
+    //     // fetchRemindersData((data: any[]) => {
+    //     //   const transformedData = transformRemindersToDates(data);
+    //     //   setSelectedDates(transformedData);
+    //     // });
+    //
+    //     fetchRemindersDataUser((data) => {
+    //         const transformedData = data
+    //             .filter((reminder: { start_date_time: any; }) => reminder.start_date_time)
+    //             .map((reminder: { start_date_time: any; subject: any; }) => ({
+    //                 date: reminder.start_date_time!.split(" ")[0],
+    //                 content: reminder.subject,
+    //                 type: "success",
+    //             }));
+    //         setSelectedDates(transformedData);
+    //     });
+    // }, []);
+
+
 
     const getListData = (value: Dayjs) => {
         const formattedDate = value.format("YYYY-MM-DD");
@@ -148,13 +264,13 @@ export default function Home() {
                         style={{marginTop: "12px"}}
                     >
                         <div className="d-flex flex-row align-items-center justify-content-between gap-1">
-                            <StatCard title="Total Users" value={1247} icon="/total_user.svg" changeText="+12%"
+                            <StatCard title="Total Users" value={dashboardData?.total_users || 0} icon="/total_user.svg" changeText=""
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Total Documents" value={1247} icon="/total_document.svg" changeText="+12%"
+                            <StatCard title="Total Documents" value={dashboardData?.total_documents || 0} icon="/total_document.svg" changeText=""
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Categories" value={1247} icon="/categories.svg" changeText="+12%"
+                            <StatCard title="Categories" value={dashboardData?.total_categories || 0} icon="/categories.svg" changeText=""
                                       changeColorClass="positiveChange"/>
-                            <StatCard title="Sectors" value={12} icon="/sectors.svg" changeText="0"
+                            <StatCard title="Sectors" value={dashboardData?.total_sectors || 0} icon="/sectors.svg" changeText=""
                                       changeColorClass="noChange"/>
                         </div>
                     </div>
@@ -193,7 +309,7 @@ export default function Home() {
                                 <PieChartCard
                                     title="Documents by Category"
                                     icon="/jam_document.svg"
-                                    data={categoryData}
+                                    data={categoryChartData}
                                 />
                             </div>
 
@@ -201,27 +317,11 @@ export default function Home() {
                                 <PieChartCard
                                     title="Documents by Sector"
                                     icon="/sector-line.svg"
-                                    data={sectorData}
+                                    data={sectorChartData}
                                 />
                             </div>
                         </div>
                     </div>
-
-                    {/*<div*/}
-                    {/*  className="d-flex flex-column bg-white p-2 p-lg-3 rounded mb-3"*/}
-                    {/*  style={{ marginTop: "12px" }}*/}
-                    {/*>*/}
-                    {/*  <div className="d-flex flex-row align-items-center">*/}
-                    {/*    <Heading text="Reminders" color="#444" />*/}
-                    {/*    /!* <InfoModal*/}
-                    {/*      title="Sample Blog"*/}
-                    {/*      content={`<h1><strong>Hello world,</strong></h1><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p><br><h3><strong>Hello world,</strong></h3><p>The Company Profile feature allows users to customize the branding of the application by entering the company name and uploading logos. This customization will reflect on the login screen, enhancing the professional appearance and brand identity of the application.</p>`}*/}
-                    {/*    /> *!/*/}
-                    {/*  </div>*/}
-                    {/*  /!* <Calendar onPanelChange={onPanelChange} /> *!/*/}
-                    {/*  <Calendar cellRender={cellRender} onPanelChange={onPanelChange} />*/}
-
-                    {/*</div>*/}
                     <RemindersCalendar/>
 
                     <NearlyExpiredDocuments/>
