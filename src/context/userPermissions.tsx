@@ -20,20 +20,22 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
       try {
         const response = await getWithAuth(`user-permissions/${userId}`);
 
-        if (response?.status === "fail") {
+        // Ensure valid response
+        if (!response || response.status === "fail") {
           router.push("/unauthorized");
           return;
         }
 
-        const parsedPermissions = JSON.parse(response || "[]");
+        const permissionList = response.permissions || [];
         const initialSelectedGroups: { [key: string]: string[] } = {};
-        parsedPermissions.forEach((permission: { group: string; items: string[] }) => {
+
+        permissionList.forEach((permission: { group: string; items: string[] }) => {
           initialSelectedGroups[permission.group] = permission.items;
         });
 
         setPermissions(initialSelectedGroups);
       } catch (error) {
-        console.error("Failed to fetch Role data:", error);
+        console.error("Failed to fetch role data:", error);
         router.push("/unauthorized");
       }
     };
@@ -47,5 +49,6 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
     </PermissionsContext.Provider>
   );
 };
+
 
 export const usePermissions = () => useContext(PermissionsContext);
