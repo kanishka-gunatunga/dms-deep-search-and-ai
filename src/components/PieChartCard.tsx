@@ -40,7 +40,7 @@ const PieChartCard: React.FC<PieChartCardProps> = ({ title, icon, data }) => {
                             cx="50%"
                             cy="50%"
                             labelLine={false}
-                            label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                            label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                             outerRadius={100}
                             // innerRadius={80}
                             fill="#8884d8"
