@@ -75,7 +75,7 @@ const NearlyExpiredDocuments: React.FC = () => {
     const [documents, setDocuments] = useState<Document[]>(initialDocuments);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-    const [newExpiryDate, setNewExpiryDate] = useState<Dayjs | null>(null);
+    const [newExpiryDate, setNewExpiryDate] = useState<Dayjs | undefined>();
 
     const calculateDaysLeft = (expiryDate: string) => {
         return dayjs(expiryDate).diff(dayjs(), 'day');
