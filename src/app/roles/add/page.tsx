@@ -23,7 +23,7 @@ export default function AllDocTable() {
     const [selectedGroups, setSelectedGroups] = useState<{ [key: string]: string[] }>({});
     const [apiCallFailed, setApiCallFailed] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-
+const [isAdmin, setIsAdmin] = useState(false);
     const isAuthenticated = useAuth();
 
     if (!isAuthenticated) {
@@ -120,7 +120,7 @@ export default function AllDocTable() {
             const formData = new FormData();
             formData.append("role_name", roleName);
             formData.append("permissions", JSON.stringify(selectedArray));
-
+            formData.append("is_admin", isAdmin ? "1" : "0");
             const response = await postWithAuth(`add-role`, formData);
 
 
@@ -176,7 +176,12 @@ export default function AllDocTable() {
                                 </div>
                             )}
                         </div>
-
+                        <Checkbox  className="mb-2"
+                            checked={isAdmin}
+                            onChange={(e) => setIsAdmin(e.target.checked)}
+                        >
+                           Enable Admin Dashboard
+                        </Checkbox>   
                         <Heading text="Permission" color="#444" />
                         <div className="mt-2">
                             <Checkbox

@@ -29,7 +29,7 @@ interface Props {
     const [toastMessage, setToastMessage] = useState("");
     const [error, setError] = useState("");
     const [selectedGroups, setSelectedGroups] = useState<{ [key: string]: string[] }>({});
-
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const fetchRoleData = async (id: string) => {
         try {
@@ -40,6 +40,7 @@ interface Props {
                 const roleData = response;
                 setRoleName(roleData.role_name);
                 setRoleName(response.role_name);
+                setIsAdmin(roleData.is_admin === 1 || roleData.is_admin === "1");
                 const parsedPermissions = JSON.parse(roleData.permissions || "[]");
 
                 const initialSelectedGroups: { [key: string]: string[] } = {};
@@ -167,7 +168,7 @@ interface Props {
             const formData = new FormData();
             formData.append("role_name", roleName);
             formData.append("permissions", JSON.stringify(selectedArray));
-
+            formData.append("is_admin", isAdmin ? "1" : "0");
             const response = await postWithAuth(`role-details/${id}`, formData);
 
 
@@ -220,7 +221,12 @@ interface Props {
                                 </div>
                             )}
                         </div>
-
+                            <Checkbox  className="mb-2"
+                                checked={isAdmin}
+                                onChange={(e) => setIsAdmin(e.target.checked)}
+                            >
+                                Enable Admin Dashboard
+                            </Checkbox>       
                         <Heading text="Permission" color="#444" />
                         <div className="mt-2">
                             <Checkbox
