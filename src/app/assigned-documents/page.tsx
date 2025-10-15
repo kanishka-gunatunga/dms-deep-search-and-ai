@@ -246,6 +246,7 @@ export default function AllDocTable() {
   });
 
   const [generatedLink, setGeneratedLink] = useState<string>("");
+  const [generatedID, setGeneratedID] =useState<number>(0);
   const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(
     null
   );
@@ -1022,6 +1023,7 @@ export default function AllDocTable() {
       )
     } else {
       setGeneratedLink(response.link);
+      setGeneratedID(response.id);
       handleOpenModal(
         "generatedShareableLinkModel",
         id,
@@ -1077,6 +1079,7 @@ export default function AllDocTable() {
       if (response.status === "success") {
         handleCloseModal("shareableLinkModel");
         setGeneratedLink(response.link);
+        setGeneratedID(response.id);
         handleOpenModal("generatedShareableLinkModel");
         setShareableLinkData(initialLinkData);
       } else {
@@ -1547,9 +1550,9 @@ export default function AllDocTable() {
       const formData = new FormData();
       formData.append("type", 'user');
       if (modalStates.shareAssignUserModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedUserIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedUserIds) || '');
       } else if (modalStates.shareAssignRoleModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedRoleIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedRoleIds) || '');
       }
       formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
       formData.append("start_date_time", selectedStartDateTime || "");
@@ -1604,9 +1607,9 @@ export default function AllDocTable() {
       const formData = new FormData();
       formData.append("type", "role");
       if (modalStates.shareAssignUserModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedUserIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedUserIds) || '');
       } else if (modalStates.shareAssignRoleModel) {
-        formData.append("assigned_roles_or_user", JSON.stringify(selectedRoleIds) || '');
+        formData.append("assigned_roles_or_users", JSON.stringify(selectedRoleIds) || '');
       }
       formData.append("is_time_limited", shareDocumentData?.is_time_limited || "");
       formData.append("start_date_time", selectedStartDateTime || "");
@@ -3031,7 +3034,7 @@ export default function AllDocTable() {
           <Modal.Footer>
             <div className="d-flex flex-row">
               <button
-                onClick={() => handleDeleteShareableLink(1)}
+                onClick={() => handleDeleteShareableLink(generatedID)}
                 className="custom-icon-button button-success px-3 py-1 rounded me-2"
               >
                 <IoSaveOutline fontSize={16} className="me-1" /> Delete
@@ -5563,8 +5566,8 @@ export default function AllDocTable() {
           <Modal.Body className="p-2 p-lg-4">
             <div className="d-flex preview-container">
               {viewDocument && (
-
                 <>
+                  {/* Image Preview */}
                   {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
                     <Image
                       src={viewDocument.url}
@@ -5572,8 +5575,23 @@ export default function AllDocTable() {
                       width={600}
                       height={600}
                     />
-                  ) : viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1 ? (
-                    <div className="iframe-container" data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}>
+                  ) : 
+                  /* TXT / CSV / LOG Preview */
+                  ["txt", "csv", "log"].includes(viewDocument.type) ? (
+                    <div className="text-preview" style={{ width: "100%" }}>
+                      <iframe
+                        src={viewDocument.url}
+                        title="Text Preview"
+                        style={{ width: "100%", height: "500px", border: "1px solid #ccc", background: "#fff" }}
+                      ></iframe>
+                    </div>
+                  ) : 
+                  /* PDF or Office Docs */
+                  (viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1) ? (
+                    <div
+                      className="iframe-container"
+                      data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}
+                    >
                       <iframe
                         src={
                           viewDocument.type === "pdf"
@@ -5590,6 +5608,7 @@ export default function AllDocTable() {
                 </>
               )}
             </div>
+
 
 
             <p className="mb-1" style={{ fontSize: "14px" }}>

@@ -18,6 +18,16 @@ export const fetchCategoryData = async (
   }
 };
 
+export const fetchDocumentCategoryWithCount = async (
+  setDocumentCategoryWithCountData: React.Dispatch<React.SetStateAction<any>>
+) => {
+  try {
+    const response = await getWithAuth("categories-with-doc-count");
+    setDocumentCategoryWithCountData(response);
+  } catch (error) {
+    console.error("Failed to fetch doc data:", error);
+  }
+};
 
 export const fetchCategoryChildrenData = async (
   setCategoryDropDownData: React.Dispatch<React.SetStateAction<any>>
@@ -312,6 +322,26 @@ export const fetchRemindersData = async (
 ) => {
   try {
     const response = await getWithAuth("reminders");
+    // console.log("response reminders :", response)
+    const transformedData = response.map((item: { date_time: any; created_at: any; end_date_time: any; subject: any; }) => {
+      const date = item.date_time || item.created_at || item.end_date_time;
+      return {
+        date: dayjs(date).format("YYYY-MM-DD"),
+        content: item.subject,
+        type: "success",
+      };
+    });
+    setSelectedDates(response);
+  } catch (error) {
+    console.error("Failed to fetch reminders data:", error);
+  }
+};
+
+export const fetchRemindersDataUser = async (
+  setSelectedDates: React.Dispatch<React.SetStateAction<any>>
+) => {
+  try {
+    const response = await getWithAuth("reminders-user");
     // console.log("response reminders :", response)
     const transformedData = response.map((item: { date_time: any; created_at: any; end_date_time: any; subject: any; }) => {
       const date = item.date_time || item.created_at || item.end_date_time;

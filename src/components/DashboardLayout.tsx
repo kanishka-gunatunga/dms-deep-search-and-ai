@@ -246,10 +246,25 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
     },
   ];
 
-  const filteredNavItems = navItems.filter((item) => {
-    if (!item.permission) return true;
-    return hasPermission(permissions, item.permission.group, item.permission.action);
-  });
+const filteredNavItems = navItems
+  .map((item) => {
+    if (!item.subItems) {
+      if (!item.permission || hasPermission(permissions, item.permission.group, item.permission.action)) {
+        return item;
+      }
+      return null;
+    }
+
+    const filteredSubItems = item.subItems.filter((subItem) => {
+      if (!subItem.permission) return true;
+      return hasPermission(permissions, subItem.permission.group, subItem.permission.action);
+    });
+
+    if (filteredSubItems.length === 0) return null;
+
+    return { ...item, subItems: filteredSubItems };
+  })
+  .filter((item): item is Exclude<typeof item, null> => item !== null);
 
   const logoUrl = data?.logo_url || '/logo.svg';
 
