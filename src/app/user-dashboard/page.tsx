@@ -20,6 +20,7 @@ import RemindersCalendar from "@/components/RemindersCalendar";
 import NearlyExpiredDocuments from "@/components/NearlyExpiredDocuments";
 import MySector from "@/components/MySector";
 import AssignedFiles from "@/components/AssignedFiles";
+import {getWithAuth} from "@/utils/apiClient";
 
 
 type Reminder = {
@@ -33,6 +34,31 @@ type SelectedDate = {
     content: string;
     type: "success" | "processing" | "error" | "default" | "warning";
 };
+
+
+interface ChartDataItem {
+    name: string;
+    value: number;
+    color: string;
+}
+
+interface DashboardData {
+    total_users: number;
+    total_documents: number;
+    total_categories: number;
+    total_sectors: number;
+    documents_by_category: {
+        category_name: string;
+        percentage: number;
+    }[];
+    documents_by_sector: {
+        sector_name: string;
+        percentage: number;
+    }[];
+}
+
+
+const generateRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
 
 export default function Home() {
     const isAuthenticated = useAuth();
@@ -56,6 +82,54 @@ export default function Home() {
 
 
     const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+
+    const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+    const [categoryChartData, setCategoryChartData] = useState<ChartDataItem[]>([]);
+    const [sectorChartData, setSectorChartData] = useState<ChartDataItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                const response: DashboardData = await getWithAuth("admin-dashboard-data");
+                setDashboardData(response);
+
+                if (response.documents_by_category) {
+                    const transformedCategoryData = response.documents_by_category
+                        .filter(item => item.percentage > 0)
+                        .map(item => ({
+                            name: item.category_name,
+                            value: Math.round(item.percentage),
+                            color: generateRandomColor(),
+                        }));
+                    setCategoryChartData(transformedCategoryData);
+                }
+
+                if (response.documents_by_sector) {
+                    const transformedSectorData = response.documents_by_sector
+                        .filter(item => item.percentage > 0)
+                        .map(item => ({
+                            name: item.sector_name,
+                            value: Math.round(item.percentage),
+                            color: generateRandomColor(),
+                        }));
+                    setSectorChartData(transformedSectorData);
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch dashboard data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (isAuthenticated) {
+            fetchDashboardData();
+        }
+    }, [isAuthenticated]);
+
+
+    console.log("--------------", dashboardData);
 
 
     useEffect(() => {

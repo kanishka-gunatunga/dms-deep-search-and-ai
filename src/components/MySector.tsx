@@ -2,9 +2,17 @@ import React from 'react';
 import {Tag} from 'antd';
 import {BsBuilding} from 'react-icons/bs';
 import Image from "next/image";
+
 // import styles from '../styles/Dashboard.module.css';
 
-const MySector: React.FC = () => {
+
+interface MySectorProps {
+    sectorName: string;
+    userCount: number;
+    documentCount: number;
+}
+
+const MySector: React.FC<MySectorProps> = ({sectorName, userCount, documentCount}) => {
     return (
         <div className={`p-4 calendarWrapper`}>
             {/* Header */}
@@ -23,12 +31,12 @@ const MySector: React.FC = () => {
                 {/* Sector Info */}
                 <div className="mb-4">
                     <div className="d-flex justify-content-between align-items-center">
-                        <h4 className="fw-bold" style={{fontSize: "20px"}}>Healthcare</h4>
+                        <h4 className="fw-bold" style={{fontSize: "20px"}}>{sectorName}</h4>
                         <Tag color="#EA580C" style={{fontWeight: 600}}>Active Sector</Tag>
                     </div>
-                    <p className="text-muted small" style={{fontSize: "14px", color: "#6B7280"}}>
-                        Medical services, hospitals, and healthcare facilities
-                    </p>
+                    {/*<p className="text-muted small" style={{fontSize: "14px", color: "#6B7280"}}>*/}
+                    {/*    Medical services, hospitals, and healthcare facilities*/}
+                    {/*</p>*/}
                 </div>
 
                 {/* Stats */}
@@ -39,7 +47,7 @@ const MySector: React.FC = () => {
                             <div className="d-flex gap-1">
                                 <Image src="/users.svg" alt="user icon" width={18} height={18}/>
                                 {/*<BsPeople className="fs-5 text-muted me-2" color="#EA580C" style={{color: "#EA580C"}}/>*/}
-                                <h3 style={{fontSize: '1.125rem', fontWeight: 600}}>156</h3>
+                                <h3 style={{fontSize: '1.125rem', fontWeight: 600}}>{userCount}</h3>
                                 {/*<Statistic title="Total Users" value={156}*/}
                                 {/*           valueStyle={{fontSize: '1.25rem', fontWeight: 600}}/>*/}
                             </div>
@@ -51,7 +59,7 @@ const MySector: React.FC = () => {
 
                             <div className="d-flex gap-1">
                                 <Image src="/total_document.svg" alt="user icon" width={18} height={18}/>
-                                <h3 style={{fontSize: '1.125rem', fontWeight: 600}}>2847</h3>
+                                <h3 style={{fontSize: '1.125rem', fontWeight: 600}}>{documentCount}</h3>
                             </div>
                             <p style={{fontSize: '12px', color: '#6B7280'}}>Documents</p>
                         </div>

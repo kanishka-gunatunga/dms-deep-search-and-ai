@@ -34,11 +34,21 @@ const eventData: EventData[] = [
     },
 ];
 
-const RemindersCalendar: React.FC = () => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+interface Reminder {
+    date: string;
+    content: string;
+    type: "success" | "processing" | "error" | "default" | "warning";
+}
 
-    const showModal = (event: EventData) => {
+interface RemindersCalendarProps {
+    reminders: Reminder[];
+}
+
+const RemindersCalendar: React.FC<RemindersCalendarProps> = ({reminders}) => {
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<Reminder | null>(null);
+
+    const showModal = (event: Reminder) => {
         setSelectedEvent(event);
         setIsModalVisible(true);
     };
@@ -48,9 +58,20 @@ const RemindersCalendar: React.FC = () => {
         setSelectedEvent(null);
     };
 
+    const getColorFromType = (type: Reminder['type']) => {
+        const colorMap = {
+            success: '#52c41a',
+            warning: '#faad14',
+            error: '#f5222d',
+            processing: '#1890ff',
+            default: '#d9d9d9'
+        };
+        return colorMap[type] || colorMap.default;
+    };
+
     const dateCellRender = (value: Dayjs) => {
         const dateStr = value.format('YYYY-MM-DD');
-        const eventsForDate = eventData.filter((event) => event.date === dateStr);
+        const eventsForDate = reminders.filter((event) => event.date === dateStr);
 
         if (eventsForDate.length === 0) {
             return null;
@@ -64,8 +85,8 @@ const RemindersCalendar: React.FC = () => {
                         className="eventItem"
                         onClick={() => showModal(event)}
                     >
-                        <span className="eventDot" style={{backgroundColor: event.color}}></span>
-                        <span>{event.title}</span>
+                        <span className="eventDot" style={{backgroundColor: getColorFromType(event.type)}}></span>
+                        <span>{event.content}</span>
                     </div>
                 ))}
             </div>
@@ -92,12 +113,12 @@ const RemindersCalendar: React.FC = () => {
             </div>
 
             <Modal
-                title={selectedEvent?.title}
+                title={selectedEvent?.content}
                 open={isModalVisible}
                 onCancel={handleCancel}
                 footer={null}
             >
-                <p>{selectedEvent?.description}</p>
+                <p>{selectedEvent?.content}</p>
                 <div className="d-flex align-items-center mt-3">
                     <span style={{color: '#888'}}>Date:</span>
                     <span className="ms-2 fw-bold">{dayjs(selectedEvent?.date).format('MMMM D, YYYY')}</span>
