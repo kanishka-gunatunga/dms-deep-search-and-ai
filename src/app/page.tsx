@@ -4,18 +4,12 @@
 
 import DashboardLayout from "@/components/DashboardLayout";
 import styles from "./page.module.css";
-import Heading from "@/components/common/Heading";
 import {PieChart, Pie, Legend, ResponsiveContainer, Cell} from "recharts";
-import InfoModal from "@/components/common/InfoModel";
 import useAuth from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import {useEffect, useState} from "react";
 import {fetchRemindersData, fetchRemindersDataUser} from "@/utils/dataFetchFunctions";
-import {Badge, Calendar} from "antd";
-import type {BadgeProps, CalendarProps} from "antd";
-import type {Dayjs} from "dayjs";
 import StatCard from "@/components/StatCard";
-import {BsBriefcaseFill, BsFileEarmarkText, BsPerson} from "react-icons/bs";
 import PieChartCard from "@/components/PieChartCard";
 import RemindersCalendar from "@/components/RemindersCalendar";
 import NearlyExpiredDocuments from "@/components/NearlyExpiredDocuments";
@@ -57,6 +51,7 @@ interface AdminDashboardData {
         sector_name: string;
         percentage: number;
     }[];
+    near_expiry_documents: NearExpiryDocument[];
 }
 
 
@@ -73,6 +68,25 @@ export interface UserDashboardData {
         category_name: string;
         percentage: number;
     }[];
+    near_expiry_documents: {
+        [key: string]: {
+            id: number;
+            document_name: string;
+            category_name: string;
+            sector_name: string;
+            expiration_date: string;
+            days_to_expire: number;
+        }
+    };
+}
+
+export interface NearExpiryDocument {
+    id: number;
+    name: string;
+    category_name: string;
+    sector_name: string;
+    expiration_date: string;
+    days_to_expire: number;
 }
 
 export interface AssignedDocument {
@@ -93,17 +107,13 @@ export default function Home() {
     const {userId} = useUserContext();
     const [isAdmin, setIsAdmin] = useState<number>();
 
-    // const [selectedDates, setSelectedDates] = useState<{ date: string; content: string; type: BadgeProps["status"] }[]>([
-    //   { date: "2024-12-15", content: "Meeting with client", type: "success" },
-    //   { date: "2024-12-08", content: "Project deadline", type: "warning" },
-    //   { date: "2024-12-10", content: "Code review session", type: "error" },
-    // ]);
-
     const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
     const [dashboardData, setDashboardData] = useState<AdminDashboardData | UserDashboardData | null>(null);
     const [categoryChartData, setCategoryChartData] = useState<ChartDataItem[]>([]);
     const [sectorChartData, setSectorChartData] = useState<ChartDataItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const [nearlyExpiredDocs, setNearlyExpiredDocs] = useState<NearExpiryDocument[]>([]);
 
     // const fetchDashboardData = async () => {
     //     try {
@@ -205,75 +215,99 @@ export default function Home() {
     //     }
     // }, [isAuthenticated]);
 
-
-    useEffect(() => {
+    const fetchAllData = async () => {
         if (typeof isAdmin === 'undefined') return;
 
+        setIsLoading(true);
         const endpoint = isAdmin === 1 ? "admin-dashboard-data" : "user-dashboard-data";
+        try {
+            const response = await getWithAuth(endpoint);
+            console.log("----------: ", response);
+            setDashboardData(response);
 
-        const fetchAllData = async () => {
-            setIsLoading(true);
+            if (isAdmin === 1) {
+                const data = response as AdminDashboardData;
+                if (data.documents_by_category) {
+                    setCategoryChartData(data.documents_by_category.filter(item => item.percentage > 0).map(item => ({
+                        name: item.category_name,
+                        value: Math.round(item.percentage),
+                        color: generateRandomColor()
+                    })));
+                }
+
+                if (data.near_expiry_documents) {
+                    setNearlyExpiredDocs(data.near_expiry_documents);
+                }
+
+                if (data.documents_by_sector) {
+                    setSectorChartData(data.documents_by_sector.filter(item => item.percentage > 0).map(item => ({
+                        name: item.sector_name,
+                        value: Math.round(item.percentage),
+                        color: generateRandomColor()
+                    })));
+                }
+            } else {
+                const data = response as UserDashboardData;
+                if (data.category_distribution) {
+                    setCategoryChartData(data.category_distribution.filter(item => item.percentage > 0).map(item => ({
+                        name: item.category_name,
+                        value: Math.round(item.percentage),
+                        color: generateRandomColor()
+                    })));
+                }
+
+                if (data.near_expiry_documents) {
+                    const docsArray = Object.values(data.near_expiry_documents).map(doc => ({
+                        ...doc,
+                        name: doc.document_name,
+                    }));
+                    setNearlyExpiredDocs(docsArray);
+                }
+            }
+
+            const reminderCallback = (data: any[]) => {
+                const transformedData = data
+                    .filter((reminder) => reminder.start_date_time)
+                    .map((reminder) => ({
+                        date: reminder.start_date_time!.split(" ")[0],
+                        content: reminder.subject,
+                        type: "success" as const,
+                    }));
+                setSelectedDates(transformedData);
+            };
+
+
+            if (isAdmin === 1) {
+                fetchRemindersData(reminderCallback);
+            } else {
+                fetchRemindersDataUser(reminderCallback);
+            }
+
+        } catch (error) {
+            console.error("Failed to fetch dashboard data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // if (isAuthenticated) {
+    //     fetchAllData();
+    // }
+    // }, [isAuthenticated, isAdmin]);
+
+    useEffect(() => {
+        if (!userId) return;
+        const fetchRoleData = async () => {
             try {
-                const response = await getWithAuth(endpoint);
-                setDashboardData(response);
-
-                // --- 4. Handle transformations based on role ---
-                if (isAdmin === 1) {
-                    const data = response as AdminDashboardData;
-                    if (data.documents_by_category) {
-                        setCategoryChartData(data.documents_by_category.filter(item => item.percentage > 0).map(item => ({
-                            name: item.category_name,
-                            value: Math.round(item.percentage),
-                            color: generateRandomColor()
-                        })));
-                    }
-                    if (data.documents_by_sector) {
-                        setSectorChartData(data.documents_by_sector.filter(item => item.percentage > 0).map(item => ({
-                            name: item.sector_name,
-                            value: Math.round(item.percentage),
-                            color: generateRandomColor()
-                        })));
-                    }
-                } else {
-                    const data = response as UserDashboardData;
-                    if (data.category_distribution) {
-                        setCategoryChartData(data.category_distribution.filter(item => item.percentage > 0).map(item => ({
-                            name: item.category_name,
-                            value: Math.round(item.percentage),
-                            color: generateRandomColor()
-                        })));
-                    }
-                }
-
-                const reminderCallback = (data: any[]) => {
-                    const transformedData = data
-                        .filter((reminder) => reminder.start_date_time)
-                        .map((reminder) => ({
-                            date: reminder.start_date_time!.split(" ")[0],
-                            content: reminder.subject,
-                            type: "success" as const,
-                        }));
-                    setSelectedDates(transformedData);
-                };
-
-
-                if (isAdmin === 1) {
-                    fetchRemindersData(reminderCallback);
-                } else {
-                    fetchRemindersDataUser(reminderCallback);
-                }
-
+                const response = await getWithAuth(`user-permissions/${userId}`);
+                setIsAdmin(response.is_admin);
             } catch (error) {
-                console.error("Failed to fetch dashboard data:", error);
-            } finally {
-                setIsLoading(false);
+                console.error("Failed to fetch user data:", error);
+                setIsAdmin(0);
             }
         };
-
-        if (isAuthenticated) {
-            fetchAllData();
-        }
-    }, [isAuthenticated, isAdmin]);
+        fetchRoleData();
+    }, [userId]);
 
 
     // useEffect(() => {
@@ -319,32 +353,38 @@ export default function Home() {
     // }, []);
 
 
-    const getListData = (value: Dayjs) => {
-        const formattedDate = value.format("YYYY-MM-DD");
-        return selectedDates.filter((item) => item.date === formattedDate);
-    };
+    // const getListData = (value: Dayjs) => {
+    //     const formattedDate = value.format("YYYY-MM-DD");
+    //     return selectedDates.filter((item) => item.date === formattedDate);
+    // };
 
-    const dateCellRender = (value: Dayjs) => {
-        const listData = getListData(value);
-        return (
-            <ul className="events">
-                {listData.map((item, index) => (
-                    <li key={index}>
-                        <Badge status={item.type} text={item.content}/>
-                    </li>
-                ))}
-            </ul>
-        );
-    };
+    // const dateCellRender = (value: Dayjs) => {
+    //     const listData = getListData(value);
+    //     return (
+    //         <ul className="events">
+    //             {listData.map((item, index) => (
+    //                 <li key={index}>
+    //                     <Badge status={item.type} text={item.content}/>
+    //                 </li>
+    //             ))}
+    //         </ul>
+    //     );
+    // };
 
-    const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
-        if (info.type === "date") return dateCellRender(current);
-        return info.originNode;
-    };
+    // const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
+    //     if (info.type === "date") return dateCellRender(current);
+    //     return info.originNode;
+    // };
 
-    const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>["mode"]) => {
-        console.log(value.format("YYYY-MM-DD"), mode);
-    };
+    // const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>["mode"]) => {
+    //     console.log(value.format("YYYY-MM-DD"), mode);
+    // };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchAllData();
+        }
+    }, [isAuthenticated, isAdmin]);
 
 
     if (!isAuthenticated || isLoading) {
@@ -479,7 +519,8 @@ export default function Home() {
 
                     <RemindersCalendar reminders={selectedDates}/>
 
-                    <NearlyExpiredDocuments/>
+                    <NearlyExpiredDocuments initialDocuments={nearlyExpiredDocs} userId={userId} isAdmin={isAdmin}
+                                            onRefresh={fetchAllData}/>
                 </div>
             </DashboardLayout>
         </div>
