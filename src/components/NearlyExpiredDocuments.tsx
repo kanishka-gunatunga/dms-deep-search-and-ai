@@ -5,6 +5,7 @@ import dayjs, {Dayjs} from 'dayjs';
 import Image from "next/image";
 import {handleDownload, handleView} from "@/utils/documentFunctions";
 import {postWithAuth} from "@/utils/apiClient";
+import Link from "next/link";
 
 
 interface NearExpiryDocument {
@@ -33,11 +34,16 @@ const getPriorityTag = (daysLeft: number) => {
     return <Tag color="blue">LOW</Tag>;
 };
 
-const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({initialDocuments, userId, isAdmin, onRefresh}) => {
+const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({
+                                                                           initialDocuments,
+                                                                           userId,
+                                                                           isAdmin,
+                                                                           onRefresh
+                                                                       }) => {
     const [documents, setDocuments] = useState<NearExpiryDocument[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState<NearExpiryDocument | null>(null);
-    const [newExpiryDate, setNewExpiryDate] = useState<Dayjs | null>(null);
+    const [newExpiryDate, setNewExpiryDate] = useState<Dayjs | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -53,6 +59,7 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({initialD
     const handleModalCancel = () => {
         setIsModalVisible(false);
         setSelectedDocument(null);
+        setNewExpiryDate(undefined);
     };
 
     // const handleConfirmRenewal = () => {
@@ -83,6 +90,15 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({initialD
             if (response.status === 'success') {
                 message.success('Document renewed successfully!');
 
+                // setDocuments(prevDocs =>
+                //     prevDocs.map(doc =>
+                //         doc.id === selectedDocument.id
+                //             ? {...doc, expiration_date: newExpiryDate.format('YYYY-MM-DD')}
+                //             : doc
+                //     )
+                // );
+                // handleModalCancel();
+
                 setDocuments(prevDocs =>
                     prevDocs.map(doc =>
                         doc.id === selectedDocument.id
@@ -90,6 +106,7 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({initialD
                             : doc
                     )
                 );
+                onRefresh();
                 handleModalCancel();
             } else {
                 message.error(response.message || 'Failed to renew the document.');
@@ -156,8 +173,9 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({initialD
                 <div className="d-flex justify-content-between align-items-center mt-4 text-muted"
                      style={{fontSize: '14px', borderTop: '1px solid rgba(0, 0, 0, 0.1)', paddingTop: '10px'}}>
                     <small style={{color: '#717182'}}>Showing {documents.length} documents</small>
-                    <a href="#" className="text-decoration-none" style={{color: '#F54900'}}>View All Expired
-                        Documents</a>
+                    <Link href="/all-documents" className="text-decoration-none" style={{color: '#F54900'}}>View All
+                        Expired
+                        Documents</Link>
                 </div>
             </div>
 

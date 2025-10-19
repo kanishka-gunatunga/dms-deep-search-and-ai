@@ -407,7 +407,8 @@ export default function Home() {
                         style={{marginTop: "12px"}}
                     >
                         {isAdmin === 1 && adminData && (
-                            <div className="d-flex flex-row align-items-center justify-content-between gap-1">
+                            // <div className="d-flex flex-row align-items-center justify-content-between gap-1">
+                            <div className="row g-3">
                                 <StatCard title="Total Users" value={adminData?.total_users || 0}
                                           icon="/total_user.svg"
                                           changeText=""
@@ -425,7 +426,8 @@ export default function Home() {
                         )}
 
                         {isAdmin === 0 && userData && (
-                            <div className="d-flex flex-row align-items-center justify-content-between gap-1">
+                            // <div className="d-flex flex-row align-items-center justify-content-between gap-1">
+                            <div className="row g-3">
                                 <StatCard title="Assigned Files" value={userData?.assigned_documents_count || 0}
                                           icon="/total_document.svg" changeText="+12%"
                                           changeColorClass="positiveChange"/>
@@ -499,7 +501,7 @@ export default function Home() {
                             <div className="row g-4">
 
                                 <div className="col-12 col-lg-8">
-                                    <AssignedFiles documents={userData.assigned_documents}/>
+                                    <AssignedFiles documents={userData.assigned_documents} userId={userId}/>
                                 </div>
 
                                 <div className="col-12 col-lg-4">

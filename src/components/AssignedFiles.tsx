@@ -5,6 +5,8 @@ import {BsEye, BsDownload} from 'react-icons/bs';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Image from "next/image";
+import {handleDownload, handleView} from "@/utils/documentFunctions";
+import Link from "next/link";
 // import styles from '../styles/AssignedFiles.module.css';
 
 dayjs.extend(relativeTime);
@@ -20,9 +22,10 @@ export interface AssignedDocument {
 
 interface AssignedFilesProps {
     documents: AssignedDocument[];
+    userId: string | null;
 }
 
-const AssignedFiles: React.FC<AssignedFilesProps> = ({documents}) => {
+const AssignedFiles: React.FC<AssignedFilesProps> = ({documents, userId}) => {
 
     const columns: TableProps<AssignedDocument>['columns'] = [
         {
@@ -70,10 +73,11 @@ const AssignedFiles: React.FC<AssignedFilesProps> = ({documents}) => {
             title: 'ACTIONS',
             key: 'actions',
             align: 'left',
-            render: () => (
+            render: (_, record) => (
                 <div>
-                    <Button type="text" shape="circle" icon={<BsEye/>}/>
-                    <Button type="text" shape="circle" icon={<BsDownload/>}/>
+                    <Button type="text" shape="circle" icon={<BsEye/>} onClick={() => handleView(record.id, userId)}/>
+                    <Button type="text" shape="circle" icon={<BsDownload/>}
+                            onClick={() => handleDownload(record.id, userId)}/>
                 </div>
             ),
         },
@@ -91,12 +95,14 @@ const AssignedFiles: React.FC<AssignedFilesProps> = ({documents}) => {
                     <Tag style={{color: "#EA580C"}}>{documents.length} files</Tag>
                     <Tag color="#EA580C">{newFilesCount} new</Tag>
                 </div>
-                <Button type="text" style={{
-                    color: "#1A1A1A",
-                    padding: "4px 10px",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "5px"
-                }}>View All</Button>
+                <Link href="/assigned-documents">
+                    <Button type="text" style={{
+                        color: "#1A1A1A",
+                        padding: "4px 10px",
+                        border: "1px solid #E5E7EB",
+                        borderRadius: "5px"
+                    }}>View All</Button>
+                </Link>
             </div>
 
             {/* Ant Design Table */}
@@ -113,7 +119,9 @@ const AssignedFiles: React.FC<AssignedFilesProps> = ({documents}) => {
                 <small className="text-muted" style={{color: "#6B7280"}}>Showing {documents.length} assigned
                     files {newFilesCount > 0 &&
                         <span style={{color: "#EA580C"}}> ({newFilesCount} newly assigned)</span>}</small>
-                <Button type="text" style={{color: "#EA580C"}}>Load More Files</Button>
+                <Link href="/assigned-documents">
+                    <Button type="text" style={{color: "#EA580C"}}>Load More Files</Button>
+                </Link>
             </div>
         </div>
     );
