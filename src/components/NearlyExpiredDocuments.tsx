@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import React, {useEffect, useState} from 'react';
-import {Button, Calendar, Tag, message} from 'antd';
+import {Button, Calendar, Tag, message, Modal as AntModal} from 'antd';
 import {Modal} from "react-bootstrap";
 import {BsEye, BsDownload, BsArrowRepeat} from 'react-icons/bs';
 import dayjs, {Dayjs} from 'dayjs';
@@ -264,7 +264,7 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({
                 </div>
             </div>
 
-            <Modal
+            <AntModal
                 title={`Renew: ${selectedDocument?.name}`}
                 open={isModalVisible}
                 confirmLoading={isLoading}
@@ -272,7 +272,7 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({
                 onCancel={handleModalCancel}
                 okText="Confirm Renewal"
             >
-                <p>Select a new expiry date for this document.</p>
+                {/*<p>Select a new expiry date for this document.</p>*/}
                 <div className="d-flex justify-content-center p-2 border rounded">
                     <Calendar
                         fullscreen={false}
@@ -281,7 +281,37 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({
                         disabledDate={(current) => current && current.isBefore(dayjs(), 'day')}
                     />
                 </div>
-            </Modal>
+            </AntModal>
+
+            {/*<Modal*/}
+            {/*    show={isModalVisible}*/}
+            {/*    onHide={handleModalCancel}*/}
+            {/*    size="md"*/}
+            {/*    centered*/}
+            {/*>*/}
+            {/*    <Modal.Header closeButton>*/}
+            {/*        <Modal.Title>Renew: {selectedDocument?.name}</Modal.Title>*/}
+            {/*    </Modal.Header>*/}
+            {/*    <Modal.Body>*/}
+            {/*        <p>Select a new expiry date for this document.</p>*/}
+            {/*        <div className="d-flex justify-content-center p-2 border rounded">*/}
+            {/*            <Calendar*/}
+            {/*                fullscreen={false}*/}
+            {/*                value={newExpiryDate}*/}
+            {/*                onSelect={(date) => setNewExpiryDate(date)}*/}
+            {/*                disabledDate={(current) => current && current.isBefore(dayjs(), 'day')}*/}
+            {/*            />*/}
+            {/*        </div>*/}
+            {/*    </Modal.Body>*/}
+            {/*    <Modal.Footer>*/}
+            {/*        <Button variant="secondary" onClick={handleModalCancel}>*/}
+            {/*            Cancel*/}
+            {/*        </Button>*/}
+            {/*        <Button variant="primary" onClick={handleConfirmRenewal} disabled={isLoading}>*/}
+            {/*            {isLoading ? 'Confirming...' : 'Confirm Renewal'}*/}
+            {/*        </Button>*/}
+            {/*    </Modal.Footer>*/}
+            {/*</Modal>*/}
 
             <Modal
                 centered
