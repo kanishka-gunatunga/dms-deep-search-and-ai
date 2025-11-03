@@ -63,13 +63,20 @@ textarea {
   font-size: 14px !important;
 }
 
+/*.navLogo {*/
+/*  height: 35px !important;*/
+/*  width: auto !important;*/
+/*}*/
+
 .navLogo {
-  height: 35px !important;
-  width: auto !important;
+    height: 80px !important;
+    width: auto !important;
+    max-width: 120px;
+    object-fit: contain;
 }
 
 .loginLogo {
-  height: 75px !important;
+  height: 120px !important;
   width: auto !important;
 }
 
@@ -958,11 +965,11 @@ iframe #WordViewerStatusBar {
 
 /* Main container for the entire component */
 .calendarWrapper {
-    background-color: white;
-    padding: 1rem 1.5rem;
-    border-radius: 1.25rem;
+    background-color: white !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 1.25rem !important;
     /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);*/
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Style for each event item in a cell */
@@ -995,7 +1002,7 @@ iframe #WordViewerStatusBar {
 
 /* Overriding Ant Design's default styles */
 :global(.ant-picker-calendar-full .ant-picker-panel .ant-picker-body) {
-    padding: 0;
+    padding: 0 !important;
 }
 
 :global(.ant-picker-calendar-full .ant-picker-cell) {
@@ -1004,7 +1011,7 @@ iframe #WordViewerStatusBar {
 
 :global(.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner) {
     background-color: #FFF4E8 !important; /* Highlight color for selected date */
-    border-radius: 0.75rem;
+    border-radius: 0.75rem !important;
 }
 
 :global(.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
@@ -1012,7 +1019,7 @@ iframe #WordViewerStatusBar {
 }
 
 :global(.ant-picker-calendar-header) {
-    padding: 0 0 1rem 0; /* Adjust header padding */
+    padding: 0 0 1rem 0 !important; /* Adjust header padding */
 }
 
 :where(.css-dev-only-do-not-override-49qm).ant-picker-calendar.ant-picker-calendar-full .ant-picker-calendar-date {

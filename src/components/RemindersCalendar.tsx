@@ -16,27 +16,6 @@ interface EventData {
     color: string;
 }
 
-const eventData: EventData[] = [
-    {
-        date: '2025-10-08',
-        title: 'Contract Review',
-        description: 'Final review of the Q4 client contract. All stakeholders must attend.',
-        color: '#E84A4A',
-    },
-    {
-        date: '2025-10-15',
-        title: 'Team Meeting',
-        description: 'Weekly team sync meeting to discuss project progress.',
-        color: '#3E7BFF',
-    },
-    {
-        date: '2025-10-15',
-        title: 'Deploy to Prod',
-        description: 'Scheduled production deployment for version 2.5.',
-        color: '#00B887',
-    },
-];
-
 interface Reminder {
     date: string;
     content: string;
@@ -50,6 +29,8 @@ interface RemindersCalendarProps {
 const RemindersCalendar: React.FC<RemindersCalendarProps> = ({reminders}) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<Reminder | null>(null);
+
+    console.log("-------reminders:",reminders);
 
     const showModal = (event: Reminder) => {
         setSelectedEvent(event);
@@ -110,7 +91,7 @@ const RemindersCalendar: React.FC<RemindersCalendarProps> = ({reminders}) => {
                 </div>
 
                 <Calendar
-                    defaultValue={dayjs('2025-10-12')}
+                    defaultValue={dayjs()}
                     cellRender={dateCellRender}
                 />
             </div>
