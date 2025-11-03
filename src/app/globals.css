@@ -974,21 +974,21 @@ iframe #WordViewerStatusBar {
 
 /* Style for each event item in a cell */
 .eventItem {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2px;
-    padding: 2px 4px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex !important;
+    align-items: center !important;
+    margin-bottom: 2px !important;
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 0.8rem !important;
+    transition: background-color 0.2s ease !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
 .eventItem:hover {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0 !important;
 }
 
 /* The colored dot for the event */
