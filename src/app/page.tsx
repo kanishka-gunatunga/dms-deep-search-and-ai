@@ -4,7 +4,7 @@
 
 import DashboardLayout from "@/components/DashboardLayout";
 import styles from "./page.module.css";
-import {PieChart, Pie, Legend, ResponsiveContainer, Cell} from "recharts";
+// import {PieChart, Pie, Legend, ResponsiveContainer, Cell} from "recharts";
 import useAuth from "@/hooks/useAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
 import {useEffect, useState} from "react";
