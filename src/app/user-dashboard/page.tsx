@@ -222,12 +222,12 @@ export default function Home() {
                         <div className="row g-4">
 
                             <div className="col-12 col-lg-8">
-                                <AssignedFiles/>
+                                {/*<AssignedFiles/>*/}
                             </div>
 
                             <div className="col-12 col-lg-4">
                                 <div className="d-flex flex-column gap-4">
-                                    <MySector/>
+                                    {/*<MySector/>*/}
                                     <PieChartCard
                                         title="Documents by Category"
                                         icon="/jam_document.svg"
@@ -239,9 +239,9 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <RemindersCalendar/>
+                    {/*<RemindersCalendar/>*/}
 
-                    <NearlyExpiredDocuments/>
+                    {/*<NearlyExpiredDocuments/>*/}
                 </div>
             </DashboardLayout>
         </div>
