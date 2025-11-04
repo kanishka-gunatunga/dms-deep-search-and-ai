@@ -38,7 +38,7 @@ const nextConfig = {
             "style-src 'self' 'unsafe-inline' https:; " +
             "font-src 'self' https: data:; " +
             "frame-src https://dms.genaitech.dev; " +
-            "frame-ancestors 'none';"
+            "frame-ancestors 'self';"
         },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       ]
