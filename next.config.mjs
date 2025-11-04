@@ -32,12 +32,12 @@ const nextConfig = {
             default-src 'self';
             base-uri 'self';
             object-src 'none';
-            connect-src 'self' https://dms.gehuhech.dev;
+            connect-src 'self' https://dms.genaitech.dev;
             img-src 'self' data: https:;
             script-src 'self' 'unsafe-inline' 'unsafe-eval';
             style-src 'self' 'unsafe-inline' https:;
             font-src 'self' https: data:;
-            frame-src https://dms.gehuhech.dev https://view.officeapps.live.com;
+            frame-src https://dms.genaitech.dev https://view.officeapps.live.com;
             frame-ancestors 'self';
         `.replace(/\s{2,}/g, ' ')
         },
