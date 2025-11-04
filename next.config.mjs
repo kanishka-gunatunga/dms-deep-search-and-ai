@@ -41,7 +41,6 @@ const nextConfig = {
             frame-ancestors 'self';
         `.replace(/\s{2,}/g, ' ')
         },
-        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       ]
     }
   ]
