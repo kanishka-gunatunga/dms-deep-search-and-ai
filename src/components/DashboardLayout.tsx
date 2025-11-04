@@ -332,7 +332,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
                                         }}
                                     >
                                         <Image
-                                            src={"/user.jpg"}
+                                            src={"/profile.png"}
                                             alt=""
                                             width={35}
                                             height={35}
@@ -377,7 +377,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
                                     }}
                                 >
                                     <Image
-                                        src={"/user.jpg"}
+                                        src={"/profile.png"}
                                         alt=""
                                         width={35}
                                         height={35}
