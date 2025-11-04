@@ -19,6 +19,7 @@ interface EventData {
 interface Reminder {
     date: string;
     content: string;
+    message: string;
     type: "success" | "processing" | "error" | "default" | "warning";
 }
 
@@ -30,7 +31,7 @@ const RemindersCalendar: React.FC<RemindersCalendarProps> = ({reminders}) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<Reminder | null>(null);
 
-    console.log("-------reminders:",reminders);
+    console.log("-------reminders:", reminders);
 
     const showModal = (event: Reminder) => {
         setSelectedEvent(event);
@@ -102,7 +103,7 @@ const RemindersCalendar: React.FC<RemindersCalendarProps> = ({reminders}) => {
                 onCancel={handleCancel}
                 footer={null}
             >
-                <p>{selectedEvent?.content}</p>
+                <p>{selectedEvent?.message}</p>
                 <div className="d-flex align-items-center mt-3">
                     <span style={{color: '#888'}}>Date:</span>
                     <span className="ms-2 fw-bold">{dayjs(selectedEvent?.date).format('MMMM D, YYYY')}</span>

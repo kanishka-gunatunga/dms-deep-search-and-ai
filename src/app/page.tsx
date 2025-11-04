@@ -28,6 +28,7 @@ type Reminder = {
 type SelectedDate = {
     date: string;
     content: string;
+    message: string;
     type: "success" | "processing" | "error" | "default" | "warning";
 };
 
@@ -271,6 +272,7 @@ export default function Home() {
                     .map((reminder) => ({
                         date: reminder.start_date_time!.split(" ")[0],
                         content: reminder.subject,
+                        message: reminder.message,
                         type: "success" as const,
                     }));
                 setSelectedDates(transformedData);
