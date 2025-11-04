@@ -206,13 +206,15 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({
                         <Image src="/warning.svg" alt="warning icon" width={20} height={20}/>
                         <h5 className="mb-0" style={{color: '#0A0A0A', fontSize: '16px', fontWeight: 'normal'}}>Nearly
                             Expired Documents</h5>
-                        {documents.length > 0 && <Tag color="red">{documents.length} Documents</Tag>}
+                        {documents.filter((doc) => doc.days_to_expire > 0).length > 0 &&
+                            <Tag color="red">{documents.filter((doc) => doc.days_to_expire > 0).length} Documents</Tag>}
                     </div>
                     <Button icon={<BsArrowRepeat/>} onClick={onRefresh}>Refresh</Button>
                 </div>
 
                 <div>
                     {documents
+                        .filter((doc) => doc.days_to_expire > 0)
                         .sort((a, b) => a.days_to_expire - b.days_to_expire)
                         .map((doc) => (
                             <div key={doc.id} className="documentCard">
@@ -257,7 +259,8 @@ const NearlyExpiredDocuments: React.FC<NearlyExpiredDocumentsProps> = ({
 
                 <div className="d-flex justify-content-between align-items-center mt-4 text-muted"
                      style={{fontSize: '14px', borderTop: '1px solid rgba(0, 0, 0, 0.1)', paddingTop: '10px'}}>
-                    <small style={{color: '#717182'}}>Showing {documents.length} documents</small>
+                    <small
+                        style={{color: '#717182'}}>Showing {documents.filter((doc) => doc.days_to_expire > 0).length} documents</small>
                     <Link href="/all-documents" className="text-decoration-none" style={{color: '#F54900'}}>View All
                         Expired
                         Documents</Link>
