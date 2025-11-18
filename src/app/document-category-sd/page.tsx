@@ -42,6 +42,7 @@ interface Category {
     template: string;
     status: string;
     children?: Category[];
+    service_desk_tempalte_id: string;
 }
 
 export default function AllDocTable() {
@@ -68,7 +69,8 @@ export default function AllDocTable() {
         category_name: "",
         description: "",
         template: "",
-        ftp_account: ""
+        ftp_account: "",
+        service_desk_tempalte_id: ""
     });
     const [attributeData, setattributeData] = useState<string[]>([]);
     const [currentAttribue, setcurrentAttribue] = useState<string>("");
@@ -78,7 +80,7 @@ export default function AllDocTable() {
         FtpAccDropdownItem[]
     >([]);
     const [selectedFtpId, setSelectedFtpId] = useState<string>("");
-
+    const [serviceDeskTempalteId, setServiceDeskTempalteId] = useState<string>("");
 
     const [modalStates, setModalStates] = useState({
         addCategory: false,
@@ -106,6 +108,11 @@ export default function AllDocTable() {
             [id]: !prevState[id],
         }));
     };
+
+    useEffect(() => {
+        setServiceDeskTempalteId(editData.service_desk_tempalte_id);
+    }, [editData.service_desk_tempalte_id]);
+
 
     useEffect(() => {
         setSelectedFtpId(editData.ftp_account);
@@ -211,6 +218,7 @@ export default function AllDocTable() {
             formData.append("description", description);
             formData.append("attribute_data", JSON.stringify(attributeData))
             formData.append("ftp_account", selectedFtpId);
+            formData.append("service_desk_tempalte_id", serviceDeskTempalteId);
 
             formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
@@ -227,6 +235,7 @@ export default function AllDocTable() {
                 setDescription("")
                 setSelectedCategoryId("")
                 setSelectedFtpId("")
+                setServiceDeskTempalteId("")
 
                 setToastType("success");
                 setToastMessage("Category added successfully!");
@@ -265,7 +274,8 @@ export default function AllDocTable() {
 
             formData.append("attribute_data", JSON.stringify(attributeData))
             formData.append("ftp_account", selectedFtpId);
-
+            formData.append("service_desk_tempalte_id", serviceDeskTempalteId);
+            
             formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
             });
@@ -282,6 +292,7 @@ export default function AllDocTable() {
                 setDescription("")
                 setSelectedCategoryId("")
                 setSelectedFtpId("")
+                setServiceDeskTempalteId("")
 
                 // handleCloseModal("addChildCategory");
                 setToastType("success");
@@ -360,6 +371,7 @@ export default function AllDocTable() {
             formData.append("description", editData.description);
             formData.append("attribute_data", JSON.stringify(attributeData));
             formData.append("ftp_account", selectedFtpId);
+             formData.append("service_desk_tempalte_id", serviceDeskTempalteId);
 
             formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
@@ -832,6 +844,19 @@ export default function AllDocTable() {
                         </div>
                         <div className="col-12 col-lg-12 d-flex flex-column mb-2 pe-2">
                             <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                                Service Desk Tempalte ID
+                            </p>
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={serviceDeskTempalteId}
+                                    onChange={(e) => setServiceDeskTempalteId(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="col-12 col-lg-12 d-flex flex-column mb-2 pe-2">
+                            <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
                                 Description
                             </p>
                             <textarea
@@ -1054,6 +1079,7 @@ export default function AllDocTable() {
                                 />
                             </div>
                         </div>
+                        
                         <div className="col d-flex flex-column justify-content-center align-items-center p-0 px-3 px-lg-0 mb-2">
                             <p
                                 className="mb-1 text-start w-100"
@@ -1082,6 +1108,19 @@ export default function AllDocTable() {
                                     </Dropdown.Item>
                                 ))}
                             </DropdownButton>
+                        </div>
+                         <div className="col-12 col-lg-12 d-flex flex-column mb-2 pe-2">
+                            <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                                Service Desk Tempalte ID
+                            </p>
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={serviceDeskTempalteId}
+                                    onChange={(e) => setServiceDeskTempalteId(e.target.value)}
+                                />
+                            </div>
                         </div>
                         <div className="col-12 col-lg-12 d-flex flex-column mb-2">
                             <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
@@ -1342,7 +1381,19 @@ export default function AllDocTable() {
                                 )}
                             </DropdownButton>
                         </div>
-
+                         <div className="col-12 col-lg-12 d-flex flex-column mb-2 pe-2">
+                            <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                                Service Desk Tempalte ID
+                            </p>
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={serviceDeskTempalteId}
+                                    onChange={(e) => setServiceDeskTempalteId(e.target.value)}
+                                />
+                            </div>
+                        </div>        
                         <div className="col-12 col-lg-12 d-flex flex-column mb-2">
                             <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
                                 Description
