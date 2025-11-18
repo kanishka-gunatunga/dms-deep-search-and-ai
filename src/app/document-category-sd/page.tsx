@@ -324,45 +324,51 @@ export default function AllDocTable() {
     };
 
     const fetchCategoryDetails = async () => {
-        // console.log("edit", selectedItemId);
-        try {
-            const response = await getWithAuth(`category-details/${selectedItemId}`);
-            console.log(response);
-            if (response.status === "fail") {
-                // console.log("category data fail::: ",response)
-            } else {
-                // console.log("Validated Attributes (Array)---", response.attributes.attributes); 
-                let attributesList: string[] = [];
-                if (Array.isArray(response.attributes.attributes)) {
-                    attributesList = response.attributes.attributes;
-                    // console.log("Validated (Array)---", attributesList); 
+    try {
+        const response = await getWithAuth(`category-details/${selectedItemId}`);
+        console.log("Fetched category:", response);
 
-                } else if (typeof response.attributes.attributes === "string") {
-                    try {
-                        attributesList = JSON.parse(response.attributes.attributes);
-                    } catch (error) {
-                        console.error("Failed to parse attributes string:", error);
-                    }
-                }
+        // --- FIX ATTRIBUTE HANDLING -------
+        let attributesList: string[] = [];
 
-                // console.log("Validated Attributes (Array)---", attributes); 
+        const rawAttributes = response.attributes; // <= in your API this is null
 
-                const parsedAttributes = attributesList
-                    .map((attr: string) => {
-                        const cleaned = attr.replace(/,/g, "").trim();
-                        // console.log("Cleaned Attribute---", cleaned); 
-                        return cleaned;
-                    })
-                    .filter((attr: string) => attr);
+        if (Array.isArray(rawAttributes)) {
+            attributesList = rawAttributes;
 
-                setattributeData(parsedAttributes);
-                setEditData(response);
-                console.log("category data::: ", response);
+        } else if (typeof rawAttributes === "string") {
+            try {
+                attributesList = JSON.parse(rawAttributes);
+            } catch (err) {
+                console.error("Attribute JSON parse error:", err);
             }
-        } catch (error) {
-            console.error("Error new version updating:", error);
+        } else {
+            attributesList = []; // DEFAULT FIX
         }
-    };
+
+        const parsedAttributes = attributesList
+            .map((attr: string) => attr?.replace(/,/g, "").trim())
+            .filter(Boolean);
+
+        setattributeData(parsedAttributes);
+
+        // --- FIX DESCRIPTION: API gives "null" as a string ---
+        const fixedDescription =
+            response.description === "null" || response.description == null
+                ? ""
+                : response.description;
+
+        // --- FIX REQUIRED FIELDS ---
+        setEditData(response);
+
+        // Set FTP
+        setSelectedFtpId(response.ftp_account?.toString() || "");
+
+    } catch (error) {
+        console.error("Error while loading category:", error);
+    }
+};
+
 
     const handleEditCategory = async () => {
         try {
