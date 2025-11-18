@@ -388,6 +388,7 @@ export default function AllDocTable() {
                 `category-details/${selectedItemId}`,
                 formData
             );
+            console.log(response);
             if (response.status === "success") {
                 handleCloseModal("editModel");
                 setToastType("success");
