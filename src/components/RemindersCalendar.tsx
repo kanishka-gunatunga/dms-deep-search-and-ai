@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, {useState} from 'react';
 import {Calendar, Modal} from 'antd';
 import type {Dayjs} from 'dayjs';
@@ -13,32 +16,24 @@ interface EventData {
     color: string;
 }
 
-const eventData: EventData[] = [
-    {
-        date: '2025-10-08',
-        title: 'Contract Review',
-        description: 'Final review of the Q4 client contract. All stakeholders must attend.',
-        color: '#E84A4A',
-    },
-    {
-        date: '2025-10-15',
-        title: 'Team Meeting',
-        description: 'Weekly team sync meeting to discuss project progress.',
-        color: '#3E7BFF',
-    },
-    {
-        date: '2025-10-15',
-        title: 'Deploy to Prod',
-        description: 'Scheduled production deployment for version 2.5.',
-        color: '#00B887',
-    },
-];
+interface Reminder {
+    date: string;
+    content: string;
+    message: string;
+    type: "success" | "processing" | "error" | "default" | "warning";
+}
 
-const RemindersCalendar: React.FC = () => {
+interface RemindersCalendarProps {
+    reminders: Reminder[];
+}
+
+const RemindersCalendar: React.FC<RemindersCalendarProps> = ({reminders}) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+    const [selectedEvent, setSelectedEvent] = useState<Reminder | null>(null);
 
-    const showModal = (event: EventData) => {
+    console.log("-------reminders:", reminders);
+
+    const showModal = (event: Reminder) => {
         setSelectedEvent(event);
         setIsModalVisible(true);
     };
@@ -48,9 +43,20 @@ const RemindersCalendar: React.FC = () => {
         setSelectedEvent(null);
     };
 
+    const getColorFromType = (type: Reminder['type']) => {
+        const colorMap = {
+            success: '#52c41a',
+            warning: '#faad14',
+            error: '#f5222d',
+            processing: '#1890ff',
+            default: '#d9d9d9'
+        };
+        return colorMap[type] || colorMap.default;
+    };
+
     const dateCellRender = (value: Dayjs) => {
         const dateStr = value.format('YYYY-MM-DD');
-        const eventsForDate = eventData.filter((event) => event.date === dateStr);
+        const eventsForDate = reminders.filter((event) => event.date === dateStr);
 
         if (eventsForDate.length === 0) {
             return null;
@@ -64,8 +70,8 @@ const RemindersCalendar: React.FC = () => {
                         className="eventItem"
                         onClick={() => showModal(event)}
                     >
-                        <span className="eventDot" style={{backgroundColor: event.color}}></span>
-                        <span>{event.title}</span>
+                        <span className="eventDot" style={{backgroundColor: getColorFromType(event.type)}}></span>
+                        <span>{event.content}</span>
                     </div>
                 ))}
             </div>
@@ -86,18 +92,18 @@ const RemindersCalendar: React.FC = () => {
                 </div>
 
                 <Calendar
-                    defaultValue={dayjs('2025-10-12')}
+                    defaultValue={dayjs()}
                     cellRender={dateCellRender}
                 />
             </div>
 
             <Modal
-                title={selectedEvent?.title}
+                title={selectedEvent?.content}
                 open={isModalVisible}
                 onCancel={handleCancel}
                 footer={null}
             >
-                <p>{selectedEvent?.description}</p>
+                <p>{selectedEvent?.message}</p>
                 <div className="d-flex align-items-center mt-3">
                     <span style={{color: '#888'}}>Date:</span>
                     <span className="ms-2 fw-bold">{dayjs(selectedEvent?.date).format('MMMM D, YYYY')}</span>

@@ -28,10 +28,10 @@ import {HiDocumentReport} from "react-icons/hi";
 import ChatWindow from "./chat/ChatWindow";
 import {AiOutlineMenu} from "react-icons/ai";
 // import { notification } from 'antd';
-// import Link from "next/link";
 
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import Link from "next/link";
 
 
 // const NotificationBox = ()=>{
@@ -128,7 +128,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
         };
     };
 
-    const { date, time } = useCurrentTime();
+    const {date, time} = useCurrentTime();
 
 
     const navItems = [
@@ -271,31 +271,29 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
         },
     ];
 
-const filteredNavItems = navItems
-  .map((item) => {
-    if (!item.subItems) {
-      if (!item.permission || hasPermission(permissions, item.permission.group, item.permission.action)) {
-        return item;
-      }
-      return null;
-    }
+    const filteredNavItems = navItems
+        .map((item) => {
+            if (!item.subItems) {
+                if (!item.permission || hasPermission(permissions, item.permission.group, item.permission.action)) {
+                    return item;
+                }
+                return null;
+            }
 
-    const filteredSubItems = item.subItems.filter((subItem) => {
-      if (!subItem.permission) return true;
-      return hasPermission(permissions, subItem.permission.group, subItem.permission.action);
-    });
+            const filteredSubItems = item.subItems.filter((subItem) => {
+                if (!subItem.permission) return true;
+                return hasPermission(permissions, subItem.permission.group, subItem.permission.action);
+            });
 
-    if (filteredSubItems.length === 0) return null;
+            if (filteredSubItems.length === 0) return null;
 
-    return { ...item, subItems: filteredSubItems };
-  })
-  .filter((item): item is Exclude<typeof item, null> => item !== null);
+            return {...item, subItems: filteredSubItems};
+        })
+        .filter((item): item is Exclude<typeof item, null> => item !== null);
 
     const logoUrl = data?.logo_url || '/logo.svg';
 
     if (loading) return <LoadingSpinner/>;
-
-
 
 
     return (
@@ -305,21 +303,21 @@ const filteredNavItems = navItems
         >
             {/* {contextHolder} */}
             {/* =============== Header ===================== */}
-            <Navbar bg="white" expand="lg" className="w-100 fixed-top shadow-sm">
+            <Navbar bg="white" expand="lg" className="w-100 fixed-top shadow-sm align-items-center" style={{ height: '75px', minHeight: '60px' }}>
                 <Container fluid>
-                    <div className="d-flex flex-row w-100 px-0 px-lg-5">
+                    <div className="d-flex flex-row w-100 px-0 px-lg-1">
                         <div
                             className="col-12 col-lg-6 d-flex flex-row justify-content-between justify-content-lg-start">
-                            <Navbar.Brand href="#">
+                            <Link href="/" className="">
                                 <Image
                                     src={logoUrl}
                                     alt=""
-                                    width={120}
-                                    height={100}
+                                    width={240}
+                                    height={200}
                                     objectFit="responsive"
                                     className="img-fluid navLogo"
                                 />
-                            </Navbar.Brand>
+                            </Link>
                             <div className="d-flex d-lg-none align-items-center justify-content-center">
 
                                 <Dropdown className="d-inline d-lg-none mx-2 bg-transparent" drop="down">
@@ -334,7 +332,7 @@ const filteredNavItems = navItems
                                         }}
                                     >
                                         <Image
-                                            src={"/user.jpg"}
+                                            src={"/profile.png"}
                                             alt=""
                                             width={35}
                                             height={35}
@@ -363,9 +361,9 @@ const filteredNavItems = navItems
                             </div>
                         </div>
                         <div className="col-12 col-lg-6 d-none d-lg-flex justify-content-end align-items-center">
-                            <div className="" style={{justifyItems:'end'}}>
-                                <h3 style={{color: '#6B7280', fontSize: '14px', fontWeight:400}}>Today</h3>
-                                <h3 style={{color: '#1A1A1A', fontSize: '16px', fontWeight:400}}>{date} | {time}</h3>
+                            <div className="" style={{justifyItems: 'end'}}>
+                                <h3 style={{color: '#6B7280', fontSize: '14px', fontWeight: 400}}>Today</h3>
+                                <h3 style={{color: '#1A1A1A', fontSize: '16px', fontWeight: 400}}>{date} | {time}</h3>
                             </div>
                             <Dropdown className="d-none d-lg-inline mx-2 bg-transparent" drop="down">
                                 <Dropdown.Toggle
@@ -379,7 +377,7 @@ const filteredNavItems = navItems
                                     }}
                                 >
                                     <Image
-                                        src={"/user.jpg"}
+                                        src={"/profile.png"}
                                         alt=""
                                         width={35}
                                         height={35}
