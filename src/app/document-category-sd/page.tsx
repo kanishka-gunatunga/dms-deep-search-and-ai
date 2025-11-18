@@ -377,8 +377,13 @@ export default function AllDocTable() {
             formData.append("category_name", editData.category_name || "");
             formData.append("description", editData.description);
             formData.append("attribute_data", JSON.stringify(attributeData));
-            formData.append("ftp_account", selectedFtpId);
-             formData.append("service_desk_tempalte_id", serviceDeskTempalteId);
+           if (selectedFtpId && selectedFtpId !== "null") {
+                formData.append("ftp_account", selectedFtpId);
+            }
+
+            if (serviceDeskTempalteId && serviceDeskTempalteId !== "null") {
+                formData.append("service_desk_tempalte_id", serviceDeskTempalteId);
+            }
 
             formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
