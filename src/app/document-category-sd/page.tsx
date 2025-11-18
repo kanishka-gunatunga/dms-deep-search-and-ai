@@ -327,6 +327,7 @@ export default function AllDocTable() {
         // console.log("edit", selectedItemId);
         try {
             const response = await getWithAuth(`category-details/${selectedItemId}`);
+            console.log(response);
             if (response.status === "fail") {
                 // console.log("category data fail::: ",response)
             } else {
