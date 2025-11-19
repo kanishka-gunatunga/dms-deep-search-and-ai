@@ -62,6 +62,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
         // Redirect to document view
         router.replace(`/all-documents`);
       } catch (err) {
+        console.error(err);
         setError("Auto-login failed");
         setLoading(false);
       }
