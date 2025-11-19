@@ -322,8 +322,7 @@ export default function AllDocTable() {
             // console.error("Error new version updating:", error);
         }
     };
-
-    const fetchCategoryDetails = async () => {
+const fetchCategoryDetails = async () => {
     try {
         const response = await getWithAuth(`category-details/${selectedItemId}`);
         console.log("Fetched category:", response);
@@ -331,11 +330,10 @@ export default function AllDocTable() {
         // --- FIX ATTRIBUTE HANDLING -------
         let attributesList: string[] = [];
 
-        const rawAttributes = response.attributes; // <= in your API this is null
+        const rawAttributes = response.attributes;
 
         if (Array.isArray(rawAttributes)) {
             attributesList = rawAttributes;
-
         } else if (typeof rawAttributes === "string") {
             try {
                 attributesList = JSON.parse(rawAttributes);
@@ -343,23 +341,33 @@ export default function AllDocTable() {
                 console.error("Attribute JSON parse error:", err);
             }
         } else {
-            attributesList = []; // DEFAULT FIX
+            attributesList = [];
         }
 
         const parsedAttributes = attributesList
             .map((attr: string) => attr?.replace(/,/g, "").trim())
             .filter(Boolean);
 
+        // STORE IN ATTRIBUTE STATE
         setattributeData(parsedAttributes);
 
-        // --- FIX DESCRIPTION: API gives "null" as a string ---
+        // 🔥 FIX: STORE ALSO IN EDIT OBJECT
+        setEditData(prev => ({
+            ...prev,
+            attributes: parsedAttributes
+        }));
+
+        // Fix description
         const fixedDescription =
             response.description === "null" || response.description == null
                 ? ""
                 : response.description;
 
-        // --- FIX REQUIRED FIELDS ---
-        setEditData(response);
+        setEditData(prev => ({
+            ...prev,
+            description: fixedDescription,
+            ...response
+        }));
 
         // Set FTP
         setSelectedFtpId(response.ftp_account?.toString() || "");
@@ -368,6 +376,7 @@ export default function AllDocTable() {
         console.error("Error while loading category:", error);
     }
 };
+
 
 
     const handleEditCategory = async () => {
