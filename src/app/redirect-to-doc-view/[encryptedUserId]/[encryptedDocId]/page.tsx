@@ -51,10 +51,10 @@ const RedirectToDocViewPage = ({ params }: Props) => {
   useEffect(() => {
     const autoLoginAndFetchDoc = async () => {
       try {
-        const existingToken = Cookies.get("authToken");
+        // const existingToken = Cookies.get("authToken");
         let documentId = encryptedDocId;
 
-        if (!existingToken) {
+        // if (!existingToken) {
           const res = await fetch(`${API_BASE_URL}auto-login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -82,7 +82,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
         Cookies.set("userEmail", user.email, { expires: expiresIn });
         Cookies.set("userType", user.type, { expires: expiresIn });
         Cookies.set("userName", user.name, { expires: expiresIn });
-        }
+        // }
 
         const userId = Cookies.get("userId");
        const docResponse = await getWithAuth(`view-document/${documentId}/${userId}`);
