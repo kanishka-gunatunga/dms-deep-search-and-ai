@@ -7,6 +7,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import { useUserContext } from "@/context/userContext";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 interface Props {
   params: {
     encryptedUserId: string;
@@ -99,7 +100,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
     autoLoginAndFetchDoc();
   }, [encryptedUserId, encryptedDocId]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSpinner/>;
   if (error) return <div>{error}</div>;
 
   return (
