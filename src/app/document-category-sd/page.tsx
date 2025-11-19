@@ -330,34 +330,33 @@ const fetchCategoryDetails = async () => {
         // --- FIX ATTRIBUTE HANDLING -------
         let attributesList: string[] = [];
 
-        const rawAttributes = response.attributes;
+        const rawAttributes = response.attributes?.attributes; 
+        //             👆 THIS is the actual array string
 
         if (Array.isArray(rawAttributes)) {
             attributesList = rawAttributes;
+
         } else if (typeof rawAttributes === "string") {
             try {
                 attributesList = JSON.parse(rawAttributes);
             } catch (err) {
                 console.error("Attribute JSON parse error:", err);
             }
-        } else {
-            attributesList = [];
         }
 
         const parsedAttributes = attributesList
-            .map((attr: string) => attr?.replace(/,/g, "").trim())
+            .map((attr: string) => attr.trim())
             .filter(Boolean);
 
-        // STORE IN ATTRIBUTE STATE
+        // SET STATE
         setattributeData(parsedAttributes);
 
-        // 🔥 FIX: STORE ALSO IN EDIT OBJECT
         setEditData(prev => ({
             ...prev,
             attributes: parsedAttributes
         }));
 
-        // Fix description
+        // FIX DESCRIPTION
         const fixedDescription =
             response.description === "null" || response.description == null
                 ? ""
@@ -365,17 +364,18 @@ const fetchCategoryDetails = async () => {
 
         setEditData(prev => ({
             ...prev,
-            description: fixedDescription,
-            ...response
+            ...response,
+            description: fixedDescription
         }));
 
-        // Set FTP
+        // FTP
         setSelectedFtpId(response.ftp_account?.toString() || "");
 
     } catch (error) {
         console.error("Error while loading category:", error);
     }
 };
+
 
 
 
