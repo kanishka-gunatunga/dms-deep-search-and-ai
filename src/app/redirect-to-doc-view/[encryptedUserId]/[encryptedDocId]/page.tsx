@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { getWithAuth, API_BASE_URL } from "@/utils/apiClient";
-import { Modal } from "react-bootstrap"; // assuming you're using react-bootstrap
+import { Modal } from "react-bootstrap";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 
@@ -14,25 +14,47 @@ interface Props {
   };
 }
 
+interface Attribute {
+  attribute: string;
+  value: string;
+}
+
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  type: string;
+}
+
+interface ViewDocumentItem {
+  id: number;
+  name: string;
+  category: { id: number; category_name: string };
+  description: string;
+  meta_tags: string;
+  attributes: string;
+  type: string;
+  url: string;
+  enable_external_file_view: number;
+}
+
 const RedirectToDocViewPage = ({ params }: Props) => {
   const { encryptedUserId, encryptedDocId } = params;
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // States for modal
-  const [viewDocument, setViewDocument] = useState<any>(null);
-  const [metaTags, setMetaTags] = useState<string[]>([]);
-  const [attributes, setAttributes] = useState<any[]>([]);
+  const [viewDocument, setViewDocument] = useState<ViewDocumentItem | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [metaTags, setMetaTags] = useState<string[]>([]);
+  const [attributes, setAttributes] = useState<Attribute[]>([]);
 
   useEffect(() => {
     const autoLoginAndFetchDoc = async () => {
       try {
         const existingToken = Cookies.get("authToken");
-
         let documentId = encryptedDocId;
+
         if (!existingToken) {
-          // Auto-login API call
           const res = await fetch(`${API_BASE_URL}/auto-login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -41,6 +63,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
               encrypted_doc: encryptedDocId,
             }),
           });
+
           const data = await res.json();
 
           if (data.status !== "success") {
@@ -49,28 +72,27 @@ const RedirectToDocViewPage = ({ params }: Props) => {
             return;
           }
 
-          const token = data.data.token;
-          const user = data.data.user;
+          const token: string = data.data.token;
+          const user: UserData = data.data.user;
           documentId = data.data.document_id;
 
-          const expiresIn = 1; // 1 day
-          Cookies.set("authToken", token, { expires: expiresIn, secure: true, sameSite: "strict" });
-          Cookies.set("userId", user.id, { expires: expiresIn });
-          Cookies.set("userEmail", user.email, { expires: expiresIn });
-          Cookies.set("userType", user.type, { expires: expiresIn });
-          Cookies.set("userName", user.name, { expires: expiresIn });
+        const expiresIn = 1; // 1 day
+        Cookies.set("authToken", token, { expires: expiresIn, secure: true, sameSite: "strict" });
+        Cookies.set("userId", user.id.toString(), { expires: expiresIn }); // convert number -> string
+        Cookies.set("userEmail", user.email, { expires: expiresIn });
+        Cookies.set("userType", user.type, { expires: expiresIn });
+        Cookies.set("userName", user.name, { expires: expiresIn });
         }
 
         const userId = Cookies.get("userId");
-        // Fetch document data
-        const docResponse = await getWithAuth(`view-document/${documentId}/${userId}`);
-        const docData = docResponse.data;
+       const docResponse = await getWithAuth(`view-document/${documentId}/${userId}`);
+        const docData: ViewDocumentItem = docResponse.data; // manually type here
+
 
         setViewDocument(docData);
         setMetaTags(JSON.parse(docData.meta_tags || "[]"));
         setAttributes(JSON.parse(docData.attributes || "[]"));
         setModalVisible(true);
-
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -98,7 +120,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
             <div className="d-flex w-100 justify-content-end">
               <div className="col-11 d-flex flex-row">
                 <p className="mb-0" style={{ fontSize: "16px", color: "#333" }}>
-                  View Document: {viewDocument.name || ""}
+                  View Document: {viewDocument.name}
                 </p>
               </div>
               <div className="col-1 d-flex justify-content-end">
@@ -114,7 +136,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
           <Modal.Body className="p-2 p-lg-4">
             <div className="d-flex preview-container">
               {/* Image Preview */}
-              {["jpg","jpeg","png","gif"].includes(viewDocument.type) && (
+              {["jpg","jpeg","png","gif","bmp","webp","svg","tiff","ico","avif"].includes(viewDocument.type) && (
                 <Image src={viewDocument.url} alt={viewDocument.name} width={600} height={600} />
               )}
 
@@ -137,8 +159,13 @@ const RedirectToDocViewPage = ({ params }: Props) => {
               )}
             </div>
 
-            <p>Meta tags: {metaTags.map((tag, idx) => (<span key={idx} className="badge bg-primary me-2">{tag}</span>))}</p>
-            <p>Attributes: {attributes.map((attr, idx) => (<span key={idx} className="badge bg-secondary me-2">{attr.attribute}: {attr.value}</span>))}</p>
+            <p>Meta tags: {metaTags.map((tag, idx) => (
+              <span key={idx} className="badge bg-primary me-2">{tag}</span>
+            ))}</p>
+
+            <p>Attributes: {attributes.map((attr, idx) => (
+              <span key={idx} className="badge bg-secondary me-2">{attr.attribute}: {attr.value}</span>
+            ))}</p>
           </Modal.Body>
         </Modal>
       )}
