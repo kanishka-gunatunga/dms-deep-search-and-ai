@@ -1,53 +1,78 @@
-// app/redirect-to-doc-view/[encryptedUserId]/[encryptedDocId]/page.tsx
-import { redirect } from "next/navigation";
+"use client";
 
-interface Params {
-  encryptedUserId: string;
-  encryptedDocId: string;
-}
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/utils/apiClient";
 
 interface Props {
-  params: Params;
+  params: {
+    encryptedUserId: string;
+    encryptedDocId: string;
+  };
 }
 
-export default async function RedirectToDocView({ params }: Props) {
+const RedirectToDocViewPage = ({ params }: Props) => {
   const { encryptedUserId, encryptedDocId } = params;
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  try {
-    // Call your Laravel API to verify the encrypted IDs
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_LARAVEL_API_URL}/api/verify-doc-link`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          encrypted_user: encryptedUserId,
-          encrypted_doc: encryptedDocId,
-        }),
-        cache: "no-store", // important for server-side fetch
+  useEffect(() => {
+    const redirectToDoc = async () => {
+      const existingToken = Cookies.get("authToken");
+
+      if (existingToken) {
+        // If user already has a valid token, skip auto-login
+        router.replace(`/all-documents`);
+        return;
       }
-    );
 
-    const data = await res.json();
+      try {
+        // Auto-login request to Laravel
+        const res = await fetch(
+          `${API_BASE_URL}/auto-login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              encrypted_user: encryptedUserId,
+              encrypted_doc: encryptedDocId,
+            }),
+          }
+        );
 
-    if (data.status !== "success") {
-      // Show error page if verification fails
-      return (
-        <div style={{ padding: 20 }}>
-          <h1>Invalid or Expired Link</h1>
-          <p>{data.message}</p>
-        </div>
-      );
-    }
+        const data = await res.json();
 
-    // Auto-login → redirect with token
-    redirect(`/document-view?token=${data.token}`);
-  } catch (error) {
-    return (
-      <div style={{ padding: 20 }}>
-        <h1>Error</h1>
-        <p>{(error as Error).message}</p>
-      </div>
-    );
-  }
-}
+        if (data.status !== "success") {
+          setError(data.message || "Auto-login failed");
+          setLoading(false);
+          return;
+        }
+
+        // Set cookies for user session
+        const token = data.data.token;
+        const user = data.data.user;
+
+        Cookies.set("authToken", token, { secure: true, sameSite: "strict" });
+        Cookies.set("userId", user.id);
+        Cookies.set("userEmail", user.email);
+        Cookies.set("userName", user.name);
+
+        // Redirect to document view
+        router.replace(`/all-documents`);
+      } catch (err) {
+        setError("Auto-login failed");
+        setLoading(false);
+      }
+    };
+
+    redirectToDoc();
+  }, [encryptedUserId, encryptedDocId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  return null;
+};
+
+export default RedirectToDocViewPage;
