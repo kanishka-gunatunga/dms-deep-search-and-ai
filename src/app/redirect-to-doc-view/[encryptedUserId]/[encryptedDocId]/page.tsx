@@ -6,6 +6,7 @@ import { getWithAuth, API_BASE_URL } from "@/utils/apiClient";
 import { Modal } from "react-bootstrap";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
+import { useUserContext } from "@/context/userContext";
 
 interface Props {
   params: {
@@ -47,7 +48,8 @@ const RedirectToDocViewPage = ({ params }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [metaTags, setMetaTags] = useState<string[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
-
+const currentDateTime = new Date().toLocaleString();
+  const { userId, userName } = useUserContext();
   useEffect(() => {
     const autoLoginAndFetchDoc = async () => {
       try {
@@ -135,28 +137,48 @@ const RedirectToDocViewPage = ({ params }: Props) => {
 
           <Modal.Body className="p-2 p-lg-4">
             <div className="d-flex preview-container">
-              {/* Image Preview */}
-              {["jpg","jpeg","png","gif","bmp","webp","svg","tiff","ico","avif"].includes(viewDocument.type) && (
-                <Image src={viewDocument.url} alt={viewDocument.name} width={600} height={600} />
-              )}
-
-              {/* PDF Preview */}
-              {viewDocument.type === "pdf" && (
-                <iframe
-                  src={viewDocument.url}
-                  title="PDF Preview"
-                  style={{ width: "100%", height: "500px", border: "none" }}
-                />
-              )}
-
-              {/* Office Docs Preview */}
-              {viewDocument.enable_external_file_view === 1 && (
-                <iframe
-                  src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`}
-                  title="Office Preview"
-                  style={{ width: "100%", height: "500px", border: "none" }}
-                />
-              )}
+             {viewDocument && (
+                             <>
+                               {/* Image Preview */}
+                               {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
+                                 <Image
+                                   src={viewDocument.url}
+                                   alt={viewDocument.name}
+                                   width={600}
+                                   height={600}
+                                 />
+                               ) : 
+                               /* TXT / CSV / LOG Preview */
+                               ["txt", "csv", "log"].includes(viewDocument.type) ? (
+                                 <div className="text-preview" style={{ width: "100%" }}>
+                                   <iframe
+                                     src={viewDocument.url}
+                                     title="Text Preview"
+                                     style={{ width: "100%", height: "500px", border: "1px solid #ccc", background: "#fff" }}
+                                   ></iframe>
+                                 </div>
+                               ) : 
+                               /* PDF or Office Docs */
+                               (viewDocument.type === "pdf" || viewDocument.enable_external_file_view === 1) ? (
+                                 <div
+                                   className="iframe-container"
+                                   data-watermark={`Confidential\nDo Not Copy\n${userName}\n${currentDateTime}`}
+                                 >
+                                   <iframe
+                                     src={
+                                       viewDocument.type === "pdf"
+                                         ? viewDocument.url
+                                         : `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(viewDocument.url)}`
+                                     }
+                                     title="Document Preview"
+                                     style={{ width: "100%", height: "500px", border: "none" }}
+                                   ></iframe>
+                                 </div>
+                               ) : (
+                                 <p>No preview available for this document type.</p>
+                               )}
+                             </>
+                           )}
             </div>
 
             <p>Meta tags: {metaTags.map((tag, idx) => (
