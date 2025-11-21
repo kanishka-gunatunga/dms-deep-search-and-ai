@@ -39,9 +39,9 @@ interface ViewDocumentItem {
   url: string;
   enable_external_file_view: number;
 }
-<style jsx>{`
+<style jsx global>{`
   .container-fluid {
-    overflow: auto;
+    overflow: auto !important;
   }
 `}</style>
 const RedirectToDocViewPage = ({ params }: Props) => {
