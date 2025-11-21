@@ -39,8 +39,8 @@ interface ViewDocumentItem {
   url: string;
   enable_external_file_view: number;
 }
-<style jsx global>{`
-  .container-fluid {
+<style jsx>{`
+  :global(.container-fluid) {
     overflow: auto !important;
   }
 `}</style>
