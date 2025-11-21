@@ -106,7 +106,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
   return (
     <DashboardLayout>
       <div className="p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex justify-content-between align-items-center mb-3"> 
           <h3>View Document: {viewDocument?.name}</h3>
           <IoClose
             fontSize={24}
@@ -115,8 +115,8 @@ const RedirectToDocViewPage = ({ params }: Props) => {
           />
         </div>
 
-        <div className="d-flex flex-column preview-container mb-4">
-          {viewDocument && (
+        <div className="d-flex preview-container">
+          {viewDocument && ( 
                           <>
                             {/* Image Preview */}
                             {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
@@ -160,19 +160,58 @@ const RedirectToDocViewPage = ({ params }: Props) => {
                         )}
         </div>
 
-        {/* Meta Tags */}
-        <div className="mb-2">
-          <strong>Meta Tags:</strong> {metaTags.map((tag, idx) => (
-            <span key={idx} className="badge bg-primary me-2">{tag}</span>
-          ))}
-        </div>
-
-        {/* Attributes */}
-        <div>
-          <strong>Attributes:</strong> {attributes.map((attr, idx) => (
-            <span key={idx} className="badge bg-secondary me-2">{attr.attribute}: {attr.value}</span>
-          ))}
-        </div>
+        <p className="mb-1" style={{ fontSize: "14px" }}>
+              Document Name :{" "}
+              <span style={{ fontWeight: 600 }}>
+                {viewDocument?.name || ""}
+              </span>
+            </p>
+            <p className="mb-1" style={{ fontSize: "14px" }}>
+              Category :{" "}
+              <span style={{ fontWeight: 600 }}>
+                {viewDocument?.category.category_name}
+              </span>
+            </p>
+            <p className="mb-1 " style={{ fontSize: "14px" }}>
+              Description :{" "}
+              <span style={{ fontWeight: 600 }}>
+                {viewDocument?.description || ""}
+              </span>
+            </p>
+            <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+              Meta tags:{" "}
+              {metaTags.map((tag, index) => (
+                <span
+                  key={index}
+                  style={{
+                    fontWeight: 600,
+                    backgroundColor: "#683ab7",
+                    color: "white",
+                  }}
+                  className="me-2 px-3 rounded py-1 mb-2"
+                >
+                  {tag}
+                </span>
+              ))}
+            </p>
+            <div className="d-flex flex-column">
+              <p className="mb-1 text-start w-100" style={{ fontSize: "14px" }}>
+                Attributes:
+                {attributes.map((attr, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      fontWeight: 600,
+                      textTransform: "capitalize",
+                    }}
+                    className="me-2 px-3 rounded py-1"
+                  >
+                    <span style={{ fontWeight: 600 }}>{attr.attribute}:</span>{" "}
+                    {attr.value}
+                  </div>
+                ))}
+              </p>
+            </div>
       </div>
     </DashboardLayout>
   );
