@@ -39,7 +39,11 @@ interface ViewDocumentItem {
   url: string;
   enable_external_file_view: number;
 }
-
+<style jsx>{`
+  .container-fluid {
+    overflow: auto;
+  }
+`}</style>
 const RedirectToDocViewPage = ({ params }: Props) => {
   const { encryptedUserId, encryptedDocId } = params;
 
