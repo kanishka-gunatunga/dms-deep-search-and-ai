@@ -111,7 +111,13 @@ const RedirectToDocViewPage = ({ params }: Props) => {
 
   return (
     <DashboardLayout>
-      <div className="p-4"  style={{ overflow: "auto" }}>
+      <div
+  className="p-4"
+  style={{
+    height: "100vh",
+    overflowY: "auto", // or overflow: "auto"
+  }}
+>
         <div className="d-flex justify-content-between align-items-center mb-3"> 
           <h3>View Document: {viewDocument?.name}</h3>
           <IoClose
