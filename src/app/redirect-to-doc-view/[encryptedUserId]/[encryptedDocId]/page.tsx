@@ -114,7 +114,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
       <div
   className="p-4"
   style={{
-    height: "100vh",
+    height: "90vh",
     overflowY: "auto", // or overflow: "auto"
   }}
 >
