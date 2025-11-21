@@ -8,6 +8,7 @@ import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import { useUserContext } from "@/context/userContext";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import {useRouter} from "next/navigation";
 interface Props {
   params: {
     encryptedUserId: string;
@@ -49,6 +50,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const currentDateTime = new Date().toLocaleString();
   const { userName } = useUserContext();
+      const router = useRouter();
   useEffect(() => {
     const autoLoginAndFetchDoc = async () => {
       try {
@@ -111,7 +113,7 @@ const RedirectToDocViewPage = ({ params }: Props) => {
           <IoClose
             fontSize={24}
             style={{ cursor: "pointer" }}
-            onClick={() => window.history.back()}
+            onClick={() => router.push("/all-documents")}
           />
         </div>
 
