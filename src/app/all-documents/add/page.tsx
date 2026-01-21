@@ -561,7 +561,7 @@ export default function AllDocTable() {
                     type="file"
                     style={{ border: "solid 1px #eee" }}
                     id="document"
-                    accept=".png,.jpg,.jpeg,.tiff"
+                    accept=".png,.jpg,.jpeg,.tiff,.tif"
                     onChange={handlePreviewFileChange}
                   />
                 </div>
