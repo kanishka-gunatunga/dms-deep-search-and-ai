@@ -5588,10 +5588,10 @@ export default function AllDocTable() {
           </Modal.Header>
           <Modal.Body className="p-2 p-lg-4">
             <div className="d-flex preview-container">
-              {viewDocument && (
+               {viewDocument && (
                 <>
                   {/* Image Preview */}
-                  {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif"].includes(viewDocument.type) ? (
+                  {["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "ico", "avif", "tif"].includes(viewDocument.type) ? (
                     <Image
                       src={viewDocument.url}
                       alt={viewDocument.name}
